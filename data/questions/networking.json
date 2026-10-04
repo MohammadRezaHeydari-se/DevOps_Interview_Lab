@@ -1,0 +1,41 @@
+[
+  {
+    "id": "net-001",
+    "category": "Networking",
+    "difficulty": "junior",
+    "type": "theory",
+    "question": "What is the difference between TCP and UDP?",
+    "shortAnswer": "TCP is connection-oriented/reliable; UDP is connectionless/faster.",
+    "explanation": "TCP ensures delivery with handshake and retransmit; UDP is best for streaming/DNS.",
+    "followUps": [
+      "When would you use UDP over TCP?",
+      "What is a TCP three-way handshake?"
+    ]
+  },
+  {
+    "id": "net-002",
+    "category": "Networking",
+    "difficulty": "junior",
+    "type": "practical",
+    "question": "How do you test connectivity between servers?",
+    "shortAnswer": "Use ping, curl, telnet/nc, traceroute.",
+    "explanation": "ping checks reachability; telnet/nc tests port; traceroute shows path.",
+    "followUps": [
+      "What if ping fails but port is open?",
+      "When to use curl vs nc?"
+    ]
+  },
+  {
+    "id": "net-003",
+    "category": "Networking",
+    "difficulty": "junior",
+    "type": "theory",
+    "question": "Explain DNS and how it works.",
+    "shortAnswer": "DNS translates domain names to IP addresses via recursive/authoritative queries.",
+    "explanation": "Local cache -> recursive resolver -> root -> TLD -> authoritative; returns A/AAAA/CNAME records.",
+    "followUps": [
+      "What's a DNS record?",
+      "Difference between A and CNAME?"
+    ]
+  }
+]

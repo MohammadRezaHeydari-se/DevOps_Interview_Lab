@@ -1,0 +1,41 @@
+[
+  {
+    "id": "docker-001",
+    "category": "Docker",
+    "difficulty": "junior",
+    "type": "theory",
+    "question": "What is Docker and why use it?",
+    "shortAnswer": "Containerization tool for consistent, isolated, portable apps.",
+    "explanation": "Images + containers ensure same env dev/test/prod; lightweight vs VMs.",
+    "followUps": [
+      "Difference between image and container?",
+      "What is a Dockerfile?"
+    ]
+  },
+  {
+    "id": "docker-002",
+    "category": "Docker",
+    "difficulty": "junior",
+    "type": "practical",
+    "question": "Explain basic Docker commands.",
+    "shortAnswer": "docker build, run, ps, images, stop, rm, logs, exec.",
+    "explanation": "Build image, run container, inspect, access shell, cleanup resources.",
+    "followUps": [
+      "What is -d flag?",
+      "How to mount volume?"
+    ]
+  },
+  {
+    "id": "docker-003",
+    "category": "Docker",
+    "difficulty": "junior",
+    "type": "theory",
+    "question": "What is Docker Compose?",
+    "shortAnswer": "Tool to define/run multi-container apps via docker-compose.yml.",
+    "explanation": "Manages networks, volumes, services together with single command.",
+    "followUps": [
+      "When to use Compose vs single container?",
+      "Difference between up and up -d?"
+    ]
+  }
+]

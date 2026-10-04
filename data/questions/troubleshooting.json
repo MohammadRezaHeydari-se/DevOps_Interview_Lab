@@ -1,0 +1,41 @@
+[
+  {
+    "id": "trbl-001",
+    "category": "Troubleshooting",
+    "difficulty": "junior",
+    "type": "practical",
+    "question": "App is unreachable. How do you troubleshoot?",
+    "shortAnswer": "Check network, DNS, firewall, app logs, service status step by step.",
+    "explanation": "Follow methodical approach: ping, curl, check ports, logs, configs.",
+    "followUps": [
+      "What tools would you use?",
+      "How to isolate root cause?"
+    ]
+  },
+  {
+    "id": "trbl-002",
+    "category": "Troubleshooting",
+    "difficulty": "junior",
+    "type": "practical",
+    "question": "High CPU on Linux server - steps?",
+    "shortAnswer": "Identify with top/htop, check processes, logs, limits, kill if needed.",
+    "explanation": "top -> find PID -> ps/strace -> check app logs -> restart or tune.",
+    "followUps": [
+      "How to see historical CPU?",
+      "What is load average?"
+    ]
+  },
+  {
+    "id": "trbl-003",
+    "category": "Troubleshooting",
+    "difficulty": "junior",
+    "type": "practical",
+    "question": "CI pipeline failing. How to debug?",
+    "shortAnswer": "Check logs, recent changes, env vars, permissions, dependencies.",
+    "explanation": "Reproduce locally if possible, read step logs, verify secrets/config.",
+    "followUps": [
+      "How to rollback safely?",
+      "What if flaky test?"
+    ]
+  }
+]

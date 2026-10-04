@@ -1,0 +1,41 @@
+[
+  {
+    "id": "linux-001",
+    "category": "Linux",
+    "difficulty": "junior",
+    "type": "practical",
+    "question": "How do you check disk usage in Linux?",
+    "shortAnswer": "Use df -h and du -h commands.",
+    "explanation": "df shows filesystem usage, du shows directory/file sizes; -h gives human-readable output.",
+    "followUps": [
+      "What's the difference between df and du?",
+      "How would you find large files?"
+    ]
+  },
+  {
+    "id": "linux-002",
+    "category": "Linux",
+    "difficulty": "junior",
+    "type": "practical",
+    "question": "How do you check running processes?",
+    "shortAnswer": "Use ps aux, top, htop, or systemctl.",
+    "explanation": "ps aux lists all processes; top shows real-time usage; htop is interactive.",
+    "followUps": [
+      "How do you kill a process?",
+      "What's the difference between kill and killall?"
+    ]
+  },
+  {
+    "id": "linux-003",
+    "category": "Linux",
+    "difficulty": "junior",
+    "type": "practical",
+    "question": "Explain file permissions and how to change them.",
+    "shortAnswer": "chmod, chown, chgrp control access; permissions are read/write/execute for user/group/others.",
+    "explanation": "Octal (755) or symbolic (u+x) modes modify permissions. chown changes ownership.",
+    "followUps": [
+      "What does 755 mean?",
+      "How do you set SUID/SGID?"
+    ]
+  }
+]

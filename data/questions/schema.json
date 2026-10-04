@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Question",
+  "type": "object",
+  "required": [
+    "id",
+    "category",
+    "difficulty",
+    "type",
+    "question",
+    "shortAnswer",
+    "explanation",
+    "followUps"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "HR / LIA",
+        "Linux",
+        "Networking",
+        "Azure",
+        "Active Directory / Entra ID",
+        "Git / CI/CD",
+        "Docker",
+        "Troubleshooting"
+      ]
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": [
+        "junior",
+        "mid",
+        "senior"
+      ]
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "theory",
+        "practical"
+      ]
+    },
+    "question": {
+      "type": "string"
+    },
+    "shortAnswer": {
+      "type": "string"
+    },
+    "explanation": {
+      "type": "string"
+    },
+    "followUps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

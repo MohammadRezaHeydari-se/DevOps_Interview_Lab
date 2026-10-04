@@ -1,0 +1,41 @@
+[
+  {
+    "id": "azure-001",
+    "category": "Azure",
+    "difficulty": "junior",
+    "type": "theory",
+    "question": "What is Azure Resource Group?",
+    "shortAnswer": "Logical container for Azure resources sharing lifecycle, permissions, and policies.",
+    "explanation": "RGs organize resources, enable RBAC, tagging, and deleting together.",
+    "followUps": [
+      "Can a resource be in multiple RGs?",
+      "What is Azure Subscription?"
+    ]
+  },
+  {
+    "id": "azure-002",
+    "category": "Azure",
+    "difficulty": "junior",
+    "type": "theory",
+    "question": "Explain Azure Virtual Machine basics.",
+    "shortAnswer": "IaaS compute with OS, size, disks, VNet, NSG, and public/private IP.",
+    "explanation": "VMs run on Azure hosts; managed disks provide storage; NSGs control traffic.",
+    "followUps": [
+      "Difference between managed and unmanaged disks?",
+      "What is VM scale set?"
+    ]
+  },
+  {
+    "id": "azure-003",
+    "category": "Azure",
+    "difficulty": "junior",
+    "type": "practical",
+    "question": "How would you secure Azure resources?",
+    "shortAnswer": "Use RBAC, NSGs, private endpoints, MFA, Key Vault, and Azure AD.",
+    "explanation": "Least privilege via RBAC, network controls, secrets in Key Vault, identity with MFA.",
+    "followUps": [
+      "What is Azure Key Vault?",
+      "Explain NSG rules."
+    ]
+  }
+]

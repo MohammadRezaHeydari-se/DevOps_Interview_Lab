@@ -1,0 +1,41 @@
+[
+  {
+    "id": "hr-001",
+    "category": "HR / LIA",
+    "difficulty": "junior",
+    "type": "theory",
+    "question": "Tell me about yourself.",
+    "shortAnswer": "Focus on relevant background, skills, and motivation for the role.",
+    "explanation": "Structured response showing experience, key skills, and why DevOps aligns with goals.",
+    "followUps": [
+      "What drew you to DevOps?",
+      "What accomplishment are you most proud of?"
+    ]
+  },
+  {
+    "id": "hr-002",
+    "category": "HR / LIA",
+    "difficulty": "junior",
+    "type": "theory",
+    "question": "Why do you want to work as a DevOps Engineer?",
+    "shortAnswer": "Bridge between dev and ops, automation, reliability, and learning.",
+    "explanation": "Shows understanding of DevOps culture: collaboration, CI/CD, automation, and improving delivery.",
+    "followUps": [
+      "How would you measure success in this role?",
+      "What DevOps principles do you value most?"
+    ]
+  },
+  {
+    "id": "hr-003",
+    "category": "HR / LIA",
+    "difficulty": "junior",
+    "type": "theory",
+    "question": "What are your strengths and weaknesses?",
+    "shortAnswer": "Give honest, self-aware examples with improvement actions.",
+    "explanation": "Demonstrates reflection and growth mindset while staying relevant.",
+    "followUps": [
+      "How are you improving your weakness?",
+      "Give an example where your strength helped a team."
+    ]
+  }
+]

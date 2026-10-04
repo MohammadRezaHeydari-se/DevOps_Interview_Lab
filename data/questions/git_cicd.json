@@ -1,0 +1,41 @@
+[
+  {
+    "id": "git-001",
+    "category": "Git / CI/CD",
+    "difficulty": "junior",
+    "type": "practical",
+    "question": "Explain Git workflow basics.",
+    "shortAnswer": "Clone, branch, stage, commit, push, pull request/merge.",
+    "explanation": "Feature branches, main protected, PR reviews, rebasing/merging strategies.",
+    "followUps": [
+      "Difference between merge and rebase?",
+      "What is git pull vs git fetch?"
+    ]
+  },
+  {
+    "id": "git-002",
+    "category": "Git / CI/CD",
+    "difficulty": "junior",
+    "type": "practical",
+    "question": "How would you resolve merge conflicts?",
+    "shortAnswer": "Edit conflicted files, mark resolved, stage, commit.",
+    "explanation": "Use git status, understand conflict markers, test after resolution.",
+    "followUps": [
+      "How to avoid conflicts?",
+      "When to rebase vs merge?"
+    ]
+  },
+  {
+    "id": "git-003",
+    "category": "Git / CI/CD",
+    "difficulty": "junior",
+    "type": "theory",
+    "question": "What is CI/CD?",
+    "shortAnswer": "CI builds/tests automatically; CD automates delivery/deployment.",
+    "explanation": "CI ensures code quality; CD enables frequent, reliable releases via pipelines.",
+    "followUps": [
+      "Difference between continuous delivery and deployment?",
+      "Name CI/CD stages."
+    ]
+  }
+]

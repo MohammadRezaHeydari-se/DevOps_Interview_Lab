@@ -1,0 +1,41 @@
+[
+  {
+    "id": "ad-001",
+    "category": "Active Directory / Entra ID",
+    "difficulty": "junior",
+    "type": "theory",
+    "question": "What's the difference between Active Directory and Azure AD (Entra ID)?",
+    "shortAnswer": "AD is on-prem domain services; Entra ID is cloud identity/SSO.",
+    "explanation": "AD uses LDAP/Kerberos; Entra ID uses OAuth/OpenID Connect; hybrid common.",
+    "followUps": [
+      "What is Azure AD Connect?",
+      "Explain directory synchronization."
+    ]
+  },
+  {
+    "id": "ad-002",
+    "category": "Active Directory / Entra ID",
+    "difficulty": "junior",
+    "type": "theory",
+    "question": "What is a Group Policy Object (GPO)?",
+    "shortAnswer": "Centralized config for users/computers in AD domain.",
+    "explanation": "GPOs enforce settings (security, software, scripts) linked to OUs/sites/domains.",
+    "followUps": [
+      "What is Group Policy inheritance?",
+      "Order of GPO processing?"
+    ]
+  },
+  {
+    "id": "ad-003",
+    "category": "Active Directory / Entra ID",
+    "difficulty": "junior",
+    "type": "theory",
+    "question": "Explain RBAC in Azure/Entra context.",
+    "shortAnswer": "Role-based access control grants least privilege via roles/assignments.",
+    "explanation": "Built-in/custom roles assigned at scope (RG/subscription); Entra roles manage directory.",
+    "followUps": [
+      "Difference between Azure RBAC and Entra roles?",
+      "What is a custom role?"
+    ]
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "id": "linux-sysadmin",
+  "role": "Linux / System Administration",
+  "areas": {
+    "Linux": 1.0,
+    "Troubleshooting": 0.9,
+    "Networking": 0.7,
+    "Docker": 0.6,
+    "Azure": 0.3,
+    "Git / CI/CD": 0.3,
+    "Active Directory / Entra ID": 0.3,
+    "HR / LIA": 0.1
+  }
+}

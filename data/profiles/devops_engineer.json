@@ -1,0 +1,14 @@
+{
+  "id": "devops-engineer",
+  "role": "DevOps Engineer",
+  "areas": {
+    "Docker": 1.0,
+    "Git / CI/CD": 1.0,
+    "Troubleshooting": 0.9,
+    "Linux": 0.8,
+    "Networking": 0.6,
+    "Azure": 0.4,
+    "Active Directory / Entra ID": 0.2,
+    "HR / LIA": 0.2
+  }
+}

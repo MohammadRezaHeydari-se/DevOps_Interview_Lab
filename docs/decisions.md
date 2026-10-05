@@ -35,3 +35,14 @@ Each decision should include:
   - CLI behavior is testable without user interaction.
   - The CLI is a temporary development/testing interface; the target product is a web application, so the CLI is not expanded further.
   - No framework, packaging tool or external dependency is introduced.
+
+### DEC-004: Role profile storage and model
+
+- **Date:** 2026-10-05
+- **Status:** Accepted
+- **Context:** TASK-005 requires selecting questions by job role. A profile must describe only which interview areas matter for a role and their relative importance, and must never duplicate question content.
+- **Decision:** Store one small JSON profile per role under `data/profiles/`, with `schema.json` documenting the contract. A profile holds `id`, `role` and `areas`, where `areas` maps a question category to a positive weight (larger weight means more important). Profiles are a separate data domain: `src/core/profile_models.py`, `src/core/profile_validators.py` and `src/core/profile_loader.py` are kept apart from question models, validation and loading, and profile validation never checks category names against the question bank.
+- **Consequences:**
+  - A new role is added by adding one JSON file, with no code change.
+  - Interview building stays in the core and is not tied to the CLI or any future web UI.
+  - Category typos in profiles are caught by a test, not by profile validation.

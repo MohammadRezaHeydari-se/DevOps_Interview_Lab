@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RoleProfile",
+  "type": "object",
+  "required": [
+    "id",
+    "role",
+    "areas"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable profile identifier, e.g. devops-engineer."
+    },
+    "role": {
+      "type": "string",
+      "description": "Job role name shown to the user."
+    },
+    "areas": {
+      "type": "object",
+      "description": "Question category to relative importance. Weights are positive numbers; a larger weight means the area matters more for the role. Profiles never contain question content.",
+      "additionalProperties": {
+        "type": "number",
+        "exclusiveMinimum": 0
+      }
+    }
+  }
+}

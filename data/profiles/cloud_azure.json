@@ -1,0 +1,14 @@
+{
+  "id": "cloud-azure",
+  "role": "Cloud / Azure",
+  "areas": {
+    "Azure": 1.0,
+    "Networking": 0.8,
+    "Troubleshooting": 0.7,
+    "Linux": 0.6,
+    "Docker": 0.5,
+    "Git / CI/CD": 0.4,
+    "Active Directory / Entra ID": 0.4,
+    "HR / LIA": 0.2
+  }
+}

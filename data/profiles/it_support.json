@@ -1,0 +1,14 @@
+{
+  "id": "it-support",
+  "role": "IT Support",
+  "areas": {
+    "Troubleshooting": 1.0,
+    "HR / LIA": 1.0,
+    "Networking": 0.8,
+    "Active Directory / Entra ID": 0.6,
+    "Linux": 0.5,
+    "Azure": 0.4,
+    "Docker": 0.2,
+    "Git / CI/CD": 0.2
+  }
+}

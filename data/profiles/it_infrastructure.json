@@ -1,0 +1,14 @@
+{
+  "id": "it-infrastructure",
+  "role": "IT Infrastructure",
+  "areas": {
+    "Troubleshooting": 1.0,
+    "Networking": 0.9,
+    "Linux": 0.8,
+    "Active Directory / Entra ID": 0.7,
+    "HR / LIA": 0.5,
+    "Azure": 0.4,
+    "Docker": 0.3,
+    "Git / CI/CD": 0.3
+  }
+}

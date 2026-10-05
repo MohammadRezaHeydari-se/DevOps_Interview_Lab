@@ -9,7 +9,7 @@ DevOps Interview Lab is a practical interview question bank and training applica
 
 ## Current status
 
-This project is in early development. The target product is a web application; no web framework has been selected yet. The question bank and a minimal CLI practice session are available today. The CLI is a temporary development and testing interface for the reusable core, not the product. Everything runs on the Python 3 standard library, with no external dependencies.
+This project is in early development. The target product is a web application; no web framework has been selected yet. The question bank, the initial role profiles and a minimal CLI practice session are available today. The CLI is a temporary development and testing interface for the reusable core, not the product. Everything runs on the Python 3 standard library, with no external dependencies.
 
 ## Usage
 

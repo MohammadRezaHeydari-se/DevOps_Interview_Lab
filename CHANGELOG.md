@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Role profiles for interview selection: one small JSON file per role under `data/profiles/` (DevOps Engineer, Cloud / Azure, IT Infrastructure, IT Support, Linux / System Administration) plus `schema.json`. A profile holds only `id`, `role` and `areas` (question category to positive weight) and never duplicates question content.
+- Core profile modules, kept separate from question logic: `src/core/profile_models.py` (`RoleProfile`), `src/core/profile_validators.py` (`validate_profile`) and `src/core/profile_loader.py` (`load_profiles`).
+- `src/core/json_io.py` with the shared JSON file reader used by both core loaders.
+- `tests/test_profiles.py` covering profile validation, profile loading and profile data consistency.
+- DEC-004 in `docs/decisions.md` for profile storage and model.
 - Minimal Python `.gitignore` for `__pycache__/`, `*.pyc`, `.venv/`, and `venv/`.
 - CLI interview practice (`python3 -m src.cli.main`): choose category, difficulty and question count, then answer one question at a time. The short answer is revealed on Enter; explanation and follow-up questions are optional.
 - `tests/test_cli.py` covering the non-interactive CLI logic (choice/count parsing, session building, formatting).
@@ -21,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - docs/architecture.md: recorded the web-based target product, the reusable core and the temporary role of the CLI.
 - README: documents the run and test commands, and that the CLI is temporary.
 - Question loading, validation, filtering and selection remain in `src/core` only; the CLI delegates to it and no behavior changed.
+- `src/core/loader.py` now uses the shared `read_json_file` helper instead of its own JSON reading code.
 
 ### Removed
 

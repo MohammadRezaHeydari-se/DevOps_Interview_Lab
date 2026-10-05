@@ -1,16 +1,11 @@
 from __future__ import annotations
 
-import json
 from pathlib import Path
-from typing import Dict, List
+from typing import List
 
+from .json_io import read_json_file
 from .validators import validate_question
 from .models import Question
-
-
-def _load_json(path: Path) -> List[Dict]:
-    with path.open("r", encoding="utf-8") as f:
-        return json.load(f)
 
 
 def load_questions(data_dir: str | None = None) -> List[Question]:
@@ -27,7 +22,7 @@ def load_questions(data_dir: str | None = None) -> List[Question]:
         if fname.name == "schema.json":
             continue
         try:
-            raw = _load_json(fname)
+            raw = read_json_file(fname)
         except Exception:
             continue
         if not isinstance(raw, list):

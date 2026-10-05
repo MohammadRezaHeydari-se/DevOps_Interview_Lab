@@ -9,6 +9,8 @@ from __future__ import annotations
 
 from typing import Dict, List, Tuple
 
+from .validation_rules import is_non_empty_string, is_positive_weight
+
 REQUIRED_PROFILE_FIELDS = ("id", "role", "areas")
 
 
@@ -25,7 +27,7 @@ def validate_profile(data: Dict) -> Tuple[bool, List[str]]:
         return False, errors
 
     for field in ("id", "role"):
-        if not isinstance(data[field], str) or not data[field].strip():
+        if not is_non_empty_string(data[field]):
             errors.append(f"{field} must be a non-empty string")
 
     areas = data["areas"]
@@ -34,9 +36,9 @@ def validate_profile(data: Dict) -> Tuple[bool, List[str]]:
         return False, errors
 
     for area, weight in areas.items():
-        if not isinstance(area, str) or not area.strip():
+        if not is_non_empty_string(area):
             errors.append("area name must be a non-empty string")
-        if isinstance(weight, bool) or not isinstance(weight, (int, float)) or weight <= 0:
+        if not is_positive_weight(weight):
             errors.append(f"area weight must be a positive number: {area}")
 
     return (len(errors) == 0), errors

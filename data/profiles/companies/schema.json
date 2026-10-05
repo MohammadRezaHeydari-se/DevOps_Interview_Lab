@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CompanyProfile",
+  "type": "object",
+  "required": [
+    "id",
+    "company",
+    "roleProfileIds",
+    "focus"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable profile identifier, e.g. kreab."
+    },
+    "company": {
+      "type": "string",
+      "description": "Company name shown to the user."
+    },
+    "roleProfileIds": {
+      "type": "array",
+      "description": "Ids of the role profiles used for this company. Never contains question content.",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "focus": {
+      "type": "object",
+      "description": "Question category to relative importance. Weights are positive numbers; a larger weight means the area matters more. Company profiles never contain question content.",
+      "additionalProperties": {
+        "type": "number",
+        "exclusiveMinimum": 0
+      }
+    },
+    "notes": {
+      "type": "string",
+      "description": "Optional short note about the interview focus. Only documented facts belong here."
+    }
+  }
+}

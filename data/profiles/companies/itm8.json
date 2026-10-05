@@ -1,0 +1,22 @@
+{
+  "id": "itm8",
+  "company": "itm8",
+  "roleProfileIds": [
+    "devops-engineer",
+    "cloud-azure",
+    "it-infrastructure",
+    "it-support",
+    "linux-sysadmin"
+  ],
+  "focus": {
+    "Troubleshooting": 1.0,
+    "Networking": 0.9,
+    "Linux": 0.8,
+    "Active Directory / Entra ID": 0.7,
+    "Azure": 0.6,
+    "Docker": 0.5,
+    "Git / CI/CD": 0.5,
+    "HR / LIA": 0.4
+  },
+  "notes": "Generic interview focus only. No verified company-specific interview requirements are documented, so no company-specific areas or weights are assumed."
+}

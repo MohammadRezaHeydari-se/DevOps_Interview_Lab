@@ -46,3 +46,14 @@ Each decision should include:
   - A new role is added by adding one JSON file, with no code change.
   - Interview building stays in the core and is not tied to the CLI or any future web UI.
   - Category typos in profiles are caught by a test, not by profile validation.
+
+### DEC-005: Company profile storage and model
+
+- **Date:** 2026-10-05
+- **Status:** Accepted
+- **Context:** TASK-006 requires tailoring interviews per company. No verified company-specific interview requirements are documented, and company profiles must never duplicate question content.
+- **Decision:** Store one small JSON company profile per company under `data/profiles/companies/`, with `schema.json` documenting the contract. A company profile holds `id`, `company`, `roleProfileIds`, `focus` (question category to positive weight) and an optional `notes` string. Company profiles are a separate domain: `src/core/company_models.py`, `src/core/company_validators.py` and `src/core/company_loader.py` stay separate from the role profile modules, and only the shared field predicates in `src/core/validation_rules.py` and the JSON reader in `src/core/json_io.py` are reused. Initial profiles (Kreab, itm8, Ductus) use generic focus areas and reference all role profiles, with a note stating that no company-specific requirements are documented.
+- **Consequences:**
+  - A new company is added by adding one JSON file, with no code change.
+  - Company-specific weights can be filled in later when documented, without changing the model.
+  - Cross-domain checks (role profile ids, category names) stay in tests, not in core validation, so no data domain depends on another.

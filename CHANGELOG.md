@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Company profiles for interview tailoring: one small JSON file per company under `data/profiles/companies/` (Kreab, itm8, Ductus) plus `schema.json`. A company profile holds `id`, `company`, `roleProfileIds`, `focus` (category to positive weight) and an optional `notes` string, and never stores question content.
+- Core company modules, kept separate from role profile modules: `src/core/company_models.py` (`CompanyProfile`), `src/core/company_validators.py` (`validate_company_profile`) and `src/core/company_loader.py` (`load_company_profiles`).
+- `src/core/validation_rules.py` with the shared field predicates (`is_non_empty_string`, `is_positive_weight`) used by both profile validators.
+- `tests/test_company_profiles.py` covering company profile validation, loading and data consistency.
+- DEC-005 in `docs/decisions.md` for company profile storage and model.
 - Role profiles for interview selection: one small JSON file per role under `data/profiles/` (DevOps Engineer, Cloud / Azure, IT Infrastructure, IT Support, Linux / System Administration) plus `schema.json`. A profile holds only `id`, `role` and `areas` (question category to positive weight) and never duplicates question content.
 - Core profile modules, kept separate from question logic: `src/core/profile_models.py` (`RoleProfile`), `src/core/profile_validators.py` (`validate_profile`) and `src/core/profile_loader.py` (`load_profiles`).
 - `src/core/json_io.py` with the shared JSON file reader used by both core loaders.
@@ -27,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - README: documents the run and test commands, and that the CLI is temporary.
 - Question loading, validation, filtering and selection remain in `src/core` only; the CLI delegates to it and no behavior changed.
 - `src/core/loader.py` now uses the shared `read_json_file` helper instead of its own JSON reading code.
+- `src/core/profile_validators.py` uses the shared field predicates instead of inline checks.
 
 ### Removed
 

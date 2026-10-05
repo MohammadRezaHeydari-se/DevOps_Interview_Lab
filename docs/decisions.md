@@ -23,3 +23,15 @@ Each decision should include:
   - Easy to extend by adding new category files.
   - Simple to validate and consume without framework dependencies.
   - Clear separation of concerns; no application code introduced.
+
+### DEC-003: CLI layer on top of the question core
+
+- **Date:** 2026-10-05
+- **Status:** Accepted
+- **Context:** TASK-004 requires an interactive practice session. Question loading, validation, filtering and selection already exist in `src/core` and must not be duplicated. Tests must run without a TTY.
+- **Decision:** Add a separate `src/cli` package using the Python 3 standard library only. `src/cli/main.py` is the entry point (`python3 -m src.cli.main`); it reuses `src.core.loader.load_questions`, `src.core.selectors.filter_questions` and `src.core.selectors.select_random`. Interaction is done with `input()`/`print()`, and the non-interactive logic (choice parsing, count parsing, session building, formatting) is kept as plain functions so it can be unit tested.
+- **Consequences:**
+  - The core stays reusable and free of any CLI concerns.
+  - CLI behavior is testable without user interaction.
+  - The CLI is a temporary development/testing interface; the target product is a web application, so the CLI is not expanded further.
+  - No framework, packaging tool or external dependency is introduced.

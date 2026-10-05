@@ -10,6 +10,14 @@ These instructions apply to all AI coding assistants working on the DevOps Inter
 - Do not refactor unrelated code.
 - Production readiness will be added gradually.
 
+## Product direction
+
+- The final product is a web application. No web framework, frontend stack, or deployment model has been selected yet, and no such choice may be made unless it is explicitly requested.
+- The CLI in `src/cli` is a temporary development and testing interface for the reusable core. It is not the product and must not become one.
+- Do not expand the CLI beyond its current scope: no new features, options, or layers of convenience.
+- The reusable core in `src/core` must stay independent from the CLI and from any future web UI.
+- Anything that will be reused by the web UI belongs in the core, not in `src/cli`.
+
 ## Before making changes
 
 1. **Inspect the repository**: Read relevant files and understand the existing state before changing anything.
@@ -25,10 +33,21 @@ These instructions apply to all AI coding assistants working on the DevOps Inter
 4. **Update relevant documentation**: When architecture or behavior changes, update README.md, docs/architecture.md, docs/decisions.md, CHANGELOG.md, or other relevant docs.
 5. **Avoid speculation**: Do not add TODOs, placeholders, or future features unless explicitly requested.
 
+## Maintainability rules
+
+These rules are permanent and apply to every change.
+
+- Prefer small focused files and functions.
+- Do not create large catch-all files. A file has one clear responsibility.
+- Split code when a file contains multiple clear responsibilities.
+- Keep UI, business logic, data access and validation separate.
+- Avoid god classes, god modules and giant main files.
+- Reuse shared logic instead of copying it; one behavior has one implementation.
+- New features must not be added to an existing file just because it is convenient. Create the focused module it belongs in.
+- Keep the reusable core independent from the CLI and from any future web UI.
+
 ## Code quality
 
-- **Small and focused units**: Keep files and functions small and single-purpose.
-- **No duplication**: Reuse existing functions, classes, components, and services. Shared behavior must have exactly one reusable implementation.
 - **No duplicate resources**: Never create duplicate database connections or infrastructure clients. Shared resources must go through a centralized, reusable project service/layer.
 - **Right design style**: Use functional design for simple/stateless logic; use OOP only when objects, state, or domain behavior justify it.
 - **Modular, not fragmented**: Use the selected framework's native modular structure when applicable. Avoid large monolithic files, but split files only when there is a clear responsibility boundary.

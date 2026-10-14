@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Reusable interview builder in the core: `src/core/interview_builder.py` (`build_interview`) composes a weighted, duplicate-free interview session from a required role profile, an optional compatible company profile, an optional difficulty filter, a requested question count and an optional seed. It reuses the existing selectors and degrades gracefully when the bank cannot satisfy the request.
+- `src/core/weighting.py` with the pure weighting math: `combine_weights` (role areas define the base weights; company focus adjusts but never replaces or adds categories) and `allocate_quota` (largest-remainder distribution with deterministic tie-breaking).
+- `src/core/compatibility.py` with `ensure_compatible` and `IncompatibleProfileError` to reject a company profile that does not support the requested role.
+- `src/core/interview_models.py` with the frozen `InterviewSession` result model.
+- `tests/test_weighting.py` covering weight combination and quota allocation.
+- `tests/test_interview_builder.py` covering selection, weighting, filtering, compatibility, reproducibility and edge cases.
+- DEC-006 in `docs/decisions.md` for interview building and category weighting.
 - Company profiles for interview tailoring: one small JSON file per company under `data/profiles/companies/` (Kreab, itm8, Ductus) plus `schema.json`. A company profile holds `id`, `company`, `roleProfileIds`, `focus` (category to positive weight) and an optional `notes` string, and never stores question content.
 - Core company modules, kept separate from role profile modules: `src/core/company_models.py` (`CompanyProfile`), `src/core/company_validators.py` (`validate_company_profile`) and `src/core/company_loader.py` (`load_company_profiles`).
 - `src/core/validation_rules.py` with the shared field predicates (`is_non_empty_string`, `is_positive_weight`) used by both profile validators.

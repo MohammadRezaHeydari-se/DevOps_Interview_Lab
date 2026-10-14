@@ -57,3 +57,19 @@ Each decision should include:
   - A new company is added by adding one JSON file, with no code change.
   - Company-specific weights can be filled in later when documented, without changing the model.
   - Cross-domain checks (role profile ids, category names) stay in tests, not in core validation, so no data domain depends on another.
+
+### DEC-006: Interview building and category weighting
+
+- **Date:** 2026-10-14
+- **Status:** Accepted
+- **Context:** TASK-007 requires building an interview session from the existing question bank, role profiles and company profiles. Selection must be weighted primarily by role areas, a company focus must adjust but never replace role weights, questions must not repeat, selection must be deterministic when a seed is given, and an insufficient question bank must be handled gracefully.
+- **Decision:** Add interview building to the reusable core, separate from the CLI and any future web UI, and split by responsibility:
+  - `src/core/weighting.py` holds the pure weighting math. `combine_weights` multiplies every role area weight by the company focus weight for the same category (missing categories default to a factor of `1.0`); categories a company adds but the role does not define are ignored, so the role always owns the category set. `allocate_quota` distributes the requested count with the largest-remainder method, breaking ties by category name.
+  - `src/core/compatibility.py` holds `ensure_compatible` and `IncompatibleProfileError`; a company must list the role id in `roleProfileIds`, and a missing company is always compatible.
+  - `src/core/interview_models.py` holds the frozen `InterviewSession` result (`role`, `company`, `difficulty`, `requestedCount`, `questions`, `is_complete`).
+  - `src/core/interview_builder.py` holds `build_interview`, which only orchestrates: check the count and compatibility, filter with `selectors.filter_questions`, combine weights, then select with `selectors.select_random` per category using `exclude_ids` to prevent duplicates. Leftover slots are redistributed when a category runs out, and a shortfall yields a smaller session instead of an error.
+- **Consequences:**
+  - Weighting can be reasoned about and tested on its own; session building stays orchestration.
+  - Role areas always define the categories and base weights, and company focus is a bounded adjustment.
+  - The builder is reusable by a future web UI and is not tied to the CLI.
+  - The builder returns fewer questions rather than raising when the bank is insufficient, so callers can inspect `is_complete`.

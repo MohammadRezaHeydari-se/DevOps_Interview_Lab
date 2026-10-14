@@ -112,6 +112,45 @@ button:hover {
   flex-wrap: wrap;
 }
 
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.radio {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 500;
+}
+
+.help {
+  color: var(--muted);
+  font-size: 0.875rem;
+  margin: 0.25rem 0 0;
+}
+
+.section-title {
+  font-size: 1rem;
+  margin: 0 0 0.5rem;
+}
+
+.summary-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.qid {
+  color: var(--muted);
+  font-family: monospace;
+  font-size: 0.9rem;
+}
+
 .errors {
   background: var(--error-bg);
   color: var(--error-text);

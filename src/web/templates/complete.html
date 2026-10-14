@@ -6,6 +6,20 @@
 <h1>Interview complete</h1>
 <p class="lead">You worked through {{ total }} question{{ '' if total == 1 else 's' }}.</p>
 
+{% if ratings %}
+<section class="card">
+  <h2 class="section-title">Self-assessment summary</h2>
+  <p class="help">Subjective; not automated grading.</p>
+  <ul class="summary-list">
+    {% for qid in question_ids %}
+      {% if qid in ratings %}
+        <li><span class="qid">{{ qid }}</span> — {{ ratings[qid] }}</li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
 <form method="post" action="{{ url_for('main.new_session') }}">
   <button type="submit">Start a new interview</button>
 </form>

@@ -2,29 +2,35 @@
 
 No database and no question content: only the ordered question ids and the
 current position are kept, so the order the core interview builder produced is
-preserved for the whole session.
+preserved for the whole session. Self-assessments are stored as a simple
+mapping from question id to the user's subjective rating.
 """
 
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from flask import session
 
 _QUESTION_IDS = "interview_question_ids"
 _INDEX = "interview_index"
+_RATINGS = "interview_ratings"
+
+_VALID_RATINGS = {"got-it", "partly", "need-practice"}
 
 
 def start(question_ids: List[str]) -> None:
     """Begin a session with the given question ids in their generated order."""
     session[_QUESTION_IDS] = list(question_ids)
     session[_INDEX] = 0
+    session[_RATINGS] = {}
 
 
 def clear() -> None:
     """Drop all interview state."""
     session.pop(_QUESTION_IDS, None)
     session.pop(_INDEX, None)
+    session.pop(_RATINGS, None)
 
 
 def is_active() -> bool:
@@ -59,3 +65,34 @@ def is_complete() -> bool:
 def advance() -> None:
     """Move to the next question."""
     session[_INDEX] = current_index() + 1
+
+
+def question_ids() -> List[str]:
+    """The ordered question ids for the current session."""
+    ids = session.get(_QUESTION_IDS, [])
+    if not isinstance(ids, list):
+        return []
+    return list(ids)
+
+
+def ratings() -> Dict[str, str]:
+    """All self-assessments recorded so far."""
+    ratings = session.get(_RATINGS, {})
+    if not isinstance(ratings, dict):
+        session[_RATINGS] = {}
+        return {}
+    return dict(ratings)
+
+
+def record_rating(rating: str) -> None:
+    """Record a subjective self-assessment for the current question."""
+    question_id = current_question_id()
+    if question_id is None:
+        return
+    if rating not in _VALID_RATINGS:
+        return
+    stored = session.get(_RATINGS, {})
+    if not isinstance(stored, dict):
+        stored = {}
+    stored[question_id] = rating
+    session[_RATINGS] = stored

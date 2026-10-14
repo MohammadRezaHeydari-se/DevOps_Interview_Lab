@@ -13,8 +13,26 @@
 
 <form class="card" method="post" action="{{ url_for('main.answer') }}">
   <div class="field">
-    <label for="answer">Your answer</label>
-    <textarea id="answer" name="answer" rows="6" placeholder="Write your answer here...">{{ answer }}</textarea>
+    <label for="answer">Your answer (optional)</label>
+    <textarea id="answer" name="answer" rows="6" placeholder="Write your answer here or leave it empty...">{{ answer }}</textarea>
+  </div>
+  <div class="field">
+    <label>Self-assessment (subjective, not automated grading)</label>
+    <div class="radio-group">
+      <label class="radio">
+        <input type="radio" name="self_assessment" value="got-it" {% if rating == "got-it" %}checked{% endif %}>
+        Got it
+      </label>
+      <label class="radio">
+        <input type="radio" name="self_assessment" value="partly" {% if rating == "partly" %}checked{% endif %}>
+        Partly
+      </label>
+      <label class="radio">
+        <input type="radio" name="self_assessment" value="need-practice" {% if rating == "need-practice" %}checked{% endif %}>
+        Need practice
+      </label>
+    </div>
+    <p class="help">This is for your own reflection only.</p>
   </div>
   <div class="actions">
     <button type="submit" name="action" value="reveal">Reveal answer</button>

@@ -39,6 +39,7 @@ def _render_question(
     *,
     revealed: bool = False,
     answer: str = "",
+    rating: str | None = None,
 ):
     return render_template(
         "question.html",
@@ -48,6 +49,7 @@ def _render_question(
         is_last=number >= total,
         revealed=revealed,
         answer=answer,
+        rating=rating,
     )
 
 
@@ -104,10 +106,12 @@ def question():
         session_state.clear()
         return redirect(url_for("main.home"))
 
+    ratings = session_state.ratings()
     return _render_question(
         current,
         session_state.current_index() + 1,
         session_state.total(),
+        rating=ratings.get(current.id),
     )
 
 
@@ -131,9 +135,11 @@ def answer():
             session_state.current_index() + 1,
             session_state.total(),
             revealed=True,
-            answer=request.form.get("answer", ""),
+            answer=request.form.get("answer", "") or "",
+            rating=session_state.ratings().get(current.id),
         )
     if action == "next":
+        session_state.record_rating(request.form.get("self_assessment", ""))
         session_state.advance()
         if session_state.is_complete():
             return redirect(url_for("main.complete"))
@@ -149,7 +155,13 @@ def complete():
         return redirect(url_for("main.home"))
     if not session_state.is_complete():
         return redirect(url_for("main.question"))
-    return render_template("complete.html", total=session_state.total())
+    ratings = session_state.ratings()
+    return render_template(
+        "complete.html",
+        total=session_state.total(),
+        ratings=ratings,
+        question_ids=session_state.question_ids(),
+    )
 
 
 @bp.post("/session/new")

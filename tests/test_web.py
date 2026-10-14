@@ -223,6 +223,111 @@ class TestInterviewFlow(unittest.TestCase):
         self.assertEqual(self.client.get("/session/question").status_code, 302)
 
 
+class TestPracticeExperience(unittest.TestCase):
+    def setUp(self):
+        self.client = create_app().test_client()
+
+    def test_answer_textarea_is_optional(self):
+        self.client.post("/session", data={"role": "devops-engineer", "count": "1"}, follow_redirects=True)
+        question = self.client.get("/session/question").get_data(as_text=True)
+        self.assertIn("Your answer (optional)", question)
+
+    def test_reveal_with_empty_answer(self):
+        self.client.post("/session", data={"role": "devops-engineer", "count": "1"}, follow_redirects=True)
+        response = self.client.post("/session/answer", data={"action": "reveal"}, follow_redirects=True)
+        body = response.get_data(as_text=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Short answer", body)
+        self.assertIn("Explanation", body)
+
+    def test_self_assessment_radio_choices_present(self):
+        self.client.post("/session", data={"role": "devops-engineer", "count": "1"}, follow_redirects=True)
+        body = self.client.get("/session/question").get_data(as_text=True)
+        self.assertIn('value="got-it"', body)
+        self.assertIn('value="partly"', body)
+        self.assertIn('value="need-practice"', body)
+        self.assertIn("subjective", body.lower())
+
+    def test_missing_assessment_is_handled_safely(self):
+        self.client.post("/session", data={"role": "devops-engineer", "count": "1"}, follow_redirects=True)
+        response = self.client.post("/session/answer", data={"action": "next"}, follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Interview complete", response.get_data(as_text=True))
+
+    def test_invalid_assessment_is_ignored(self):
+        self.client.post("/session", data={"role": "devops-engineer", "count": "1"}, follow_redirects=True)
+        response = self.client.post(
+            "/session/answer",
+            data={"action": "next", "self_assessment": "invalid"},
+            follow_redirects=True,
+        )
+        self.assertEqual(response.status_code, 200)
+        body = response.get_data(as_text=True)
+        self.assertIn("Interview complete", body)
+        self.assertNotIn("Self-assessment summary", body)
+
+    def test_self_assessment_stored_for_correct_question(self):
+        self.client.post("/session", data={"role": "devops-engineer", "count": "1"}, follow_redirects=True)
+        self.client.post(
+            "/session/answer",
+            data={"action": "next", "self_assessment": "got-it"},
+            follow_redirects=True,
+        )
+        body = self.client.get("/session/complete").get_data(as_text=True)
+        self.assertIn("Self-assessment summary", body)
+        self.assertIn("got-it", body)
+
+    def test_assessments_persist_across_navigation(self):
+        self.client.post("/session", data={"role": "devops-engineer", "count": "2"}, follow_redirects=True)
+        self.client.post(
+            "/session/answer",
+            data={"action": "next", "self_assessment": "need-practice"},
+            follow_redirects=True,
+        )
+        body = self.client.get("/session/question").get_data(as_text=True)
+        self.assertIn("Question 2 of 2", body)
+        self.client.post(
+            "/session/answer",
+            data={"action": "next", "self_assessment": "partly"},
+            follow_redirects=True,
+        )
+        complete = self.client.get("/session/complete").get_data(as_text=True)
+        self.assertIn("Self-assessment summary", complete)
+        self.assertIn("need-practice", complete)
+        self.assertIn("partly", complete)
+
+    def test_completion_summary_shows_correct_counts(self):
+        self.client.post("/session", data={"role": "devops-engineer", "count": "2"}, follow_redirects=True)
+        self.client.post(
+            "/session/answer",
+            data={"action": "next", "self_assessment": "got-it"},
+            follow_redirects=True,
+        )
+        self.client.post(
+            "/session/answer",
+            data={"action": "next", "self_assessment": "got-it"},
+            follow_redirects=True,
+        )
+        body = self.client.get("/session/complete").get_data(as_text=True)
+        self.assertIn("2 questions", body)
+        self.assertIn("Self-assessment summary", body)
+        self.assertEqual(body.count("got-it"), 2)
+
+    def test_start_new_interview_clears_assessments(self):
+        self.client.post("/session", data={"role": "devops-engineer", "count": "1"}, follow_redirects=True)
+        self.client.post(
+            "/session/answer",
+            data={"action": "next", "self_assessment": "got-it"},
+            follow_redirects=True,
+        )
+        self.client.post("/session/new", follow_redirects=True)
+        self.client.post("/session", data={"role": "devops-engineer", "count": "1"}, follow_redirects=True)
+        self.client.post("/session/answer", data={"action": "next"}, follow_redirects=True)
+        complete = self.client.get("/session/complete").get_data(as_text=True)
+        self.assertNotIn("Self-assessment summary", complete)
+
+
+
 class TestInvalidNavigation(unittest.TestCase):
     def setUp(self):
         self.client = create_app().test_client()

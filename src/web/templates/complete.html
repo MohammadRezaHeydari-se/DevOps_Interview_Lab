@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Interview complete - DevOps Interview Lab{% endblock %}
+
+{% block content %}
+<h1>Interview complete</h1>
+<p class="lead">You worked through {{ total }} question{{ '' if total == 1 else 's' }}.</p>
+
+<form method="post" action="{{ url_for('main.new_session') }}">
+  <button type="submit">Start a new interview</button>
+</form>
+{% endblock %}

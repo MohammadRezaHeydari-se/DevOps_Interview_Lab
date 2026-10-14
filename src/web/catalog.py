@@ -12,6 +12,8 @@ from typing import Dict, List
 
 from src.core.company_loader import load_company_profiles
 from src.core.company_models import CompanyProfile
+from src.core.loader import load_questions
+from src.core.models import Question
 from src.core.profile_loader import load_profiles
 from src.core.profile_models import RoleProfile
 from src.core.validators import ALLOWED_DIFFICULTIES
@@ -41,3 +43,8 @@ def load_catalog() -> Catalog:
 def difficulty_options() -> List[str]:
     """Difficulty values accepted by the question bank, plus "all" (blank)."""
     return sorted(ALLOWED_DIFFICULTIES)
+
+
+def load_questions_by_id() -> Dict[str, Question]:
+    """The question bank keyed by question id, through the shared core loader."""
+    return {question.id: question for question in load_questions()}

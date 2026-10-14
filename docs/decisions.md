@@ -85,3 +85,15 @@ Each decision should include:
   - The core stays UI-agnostic and the CLI is unchanged; the web layer is the product-facing front end.
   - The MVP has no login, database, AI, scoring, persistence, containerization or deployment; those remain separate, later decisions.
   - Routes, templates and styling stay separated, so each can grow or be replaced independently.
+
+### DEC-008: Local interview flow state without a database
+
+- **Date:** 2026-10-14
+- **Status:** Accepted
+- **Context:** TASK-009 requires completing an interview one question at a time in the browser: preserve the generated order, reveal answers on request, navigate without repeats and finish, all without a database. Reference answers must never reach the page before a reveal request.
+- **Decision:** Keep the interview state in Flask's signed-cookie session (`flask.session`), through `src/web/session_state.py`. The state stores only the ordered question ids produced once by the core `build_interview` and the current index; question content is resolved on demand through the core loader (`load_questions_by_id`). The builder is not re-run mid-session, so the generated order is preserved exactly. Routes follow POST/Redirect/GET, and the reference answer block is rendered only by the reveal action. `create_app` sets a per-instance random `SECRET_KEY` (`secrets.token_hex(32)`), so no secret is committed.
+- **Consequences:**
+  - No database, no persistence layer and no new dependency; the state is small and local to the user's browser.
+  - Sessions are dropped on server restart, which is acceptable for the local development MVP.
+  - The flow is testable with Flask's test client, including invalid navigation guards.
+  - Future scoring, progress or persistence would require a separate, explicit decision.

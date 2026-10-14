@@ -2,11 +2,14 @@
 
 This is the product-facing layer. It only wires the reusable core: profile
 loading, input validation helpers and interview building stay in `src.core`.
-See `src.web.routes` for the routes, `src.web.catalog` for core data and
-`src.web.forms` for request validation.
+See `src.web.routes` for the routes, `src.web.catalog` for core data,
+`src.web.forms` for request validation and `src.web.session_state` for the
+local interview state.
 """
 
 from __future__ import annotations
+
+import secrets
 
 from flask import Flask
 
@@ -16,5 +19,6 @@ from .routes import bp
 def create_app() -> Flask:
     """Create the Flask application with its routes registered."""
     app = Flask(__name__)
+    app.config["SECRET_KEY"] = secrets.token_hex(32)
     app.register_blueprint(bp)
     return app

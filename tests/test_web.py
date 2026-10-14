@@ -1,12 +1,23 @@
 from __future__ import annotations
 
+import html
+import re
 import unittest
 
 from src.core.company_models import CompanyProfile
+from src.core.loader import load_questions
 from src.core.profile_models import RoleProfile
 from src.web import create_app
 from src.web.catalog import Catalog
 from src.web.forms import parse_session_request
+
+QUESTION_TEXT_RE = re.compile(r'<p class="question-text">(.*?)</p>', re.S)
+
+
+def current_question_text(body: str) -> str:
+    match = QUESTION_TEXT_RE.search(body)
+    assert match is not None, "question text not found in page"
+    return html.unescape(match.group(1).strip())
 
 
 def make_role(role_id: str, role: str) -> RoleProfile:
@@ -57,7 +68,14 @@ class TestCreateSession(unittest.TestCase):
     def setUp(self):
         self.client = create_app().test_client()
 
-    def test_valid_request_shows_first_question(self):
+    def test_create_redirects_to_question(self):
+        response = self.client.post(
+            "/session", data={"role": "devops-engineer", "count": "2"}
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("/session/question", response.headers["Location"])
+
+    def test_valid_request_starts_interview(self):
         response = self.client.post(
             "/session",
             data={
@@ -66,25 +84,27 @@ class TestCreateSession(unittest.TestCase):
                 "difficulty": "",
                 "count": "5",
             },
+            follow_redirects=True,
         )
         self.assertEqual(response.status_code, 200)
         body = response.get_data(as_text=True)
         self.assertIn("Question 1 of 5", body)
-        self.assertIn("Short answer", body)
-        self.assertIn("Explanation", body)
+        self.assertIn('name="answer"', body)
 
-    def test_request_with_company_shows_company_name(self):
+    def test_request_with_company_starts_interview(self):
         response = self.client.post(
             "/session",
-            data={"role": "devops-engineer", "company": "itm8", "count": "1"},
+            data={"role": "devops-engineer", "company": "itm8", "count": "2"},
+            follow_redirects=True,
         )
         self.assertEqual(response.status_code, 200)
-        self.assertIn("itm8", response.get_data(as_text=True))
+        self.assertIn("Question 1 of 2", response.get_data(as_text=True))
 
     def test_requested_count_is_reflected(self):
         response = self.client.post(
             "/session",
             data={"role": "devops-engineer", "count": "2"},
+            follow_redirects=True,
         )
         self.assertIn("Question 1 of 2", response.get_data(as_text=True))
 
@@ -92,9 +112,149 @@ class TestCreateSession(unittest.TestCase):
         response = self.client.post(
             "/session",
             data={"role": "devops-engineer", "count": "100"},
+            follow_redirects=True,
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("Question 1 of", response.get_data(as_text=True))
+
+
+class TestInterviewFlow(unittest.TestCase):
+    def setUp(self):
+        self.client = create_app().test_client()
+
+    def start(self, count: int = 3):
+        return self.client.post(
+            "/session",
+            data={"role": "devops-engineer", "count": str(count)},
+            follow_redirects=True,
+        )
+
+    def test_first_question_hides_reference_answer(self):
+        body = self.start(count=5).get_data(as_text=True)
+        self.assertIn("Question 1 of 5", body)
+        self.assertIn('name="answer"', body)
+        self.assertNotIn("Short answer", body)
+        for question in load_questions():
+            self.assertNotIn(question.shortAnswer, body)
+
+    def test_question_order_is_stable_on_refresh(self):
+        self.start(count=3)
+        first = current_question_text(
+            self.client.get("/session/question").get_data(as_text=True)
+        )
+        second = current_question_text(
+            self.client.get("/session/question").get_data(as_text=True)
+        )
+        self.assertEqual(first, second)
+
+    def test_reveal_shows_reference_answer_without_advancing(self):
+        self.start(count=2)
+        text = current_question_text(
+            self.client.get("/session/question").get_data(as_text=True)
+        )
+        body = self.client.post(
+            "/session/answer",
+            data={"action": "reveal", "answer": "draft answer"},
+            follow_redirects=True,
+        ).get_data(as_text=True)
+        self.assertIn("Question 1 of 2", body)
+        self.assertIn("Short answer", body)
+        self.assertIn("Explanation", body)
+        self.assertIn("draft answer", body)
+        self.assertIn(text, body)
+
+        refreshed = self.client.get("/session/question").get_data(as_text=True)
+        self.assertNotIn("Short answer", refreshed)
+
+    def test_next_navigates_without_repeats_until_complete(self):
+        self.start(count=3)
+        seen = []
+        for number in range(1, 4):
+            body = self.client.get("/session/question").get_data(as_text=True)
+            self.assertIn(f"Question {number} of 3", body)
+            text = current_question_text(body)
+            self.assertNotIn(text, seen)
+            seen.append(text)
+
+            revealed = self.client.post(
+                "/session/answer",
+                data={"action": "reveal", "answer": "x"},
+                follow_redirects=True,
+            ).get_data(as_text=True)
+            self.assertIn("Short answer", revealed)
+            self.assertIn(text, revealed)
+
+            advance = self.client.post(
+                "/session/answer", data={"action": "next"}, follow_redirects=True
+            )
+
+        self.assertIn("Interview complete", advance.get_data(as_text=True))
+
+    def test_last_question_offers_finish(self):
+        self.start(count=3)
+        self.client.post("/session/answer", data={"action": "next"}, follow_redirects=True)
+        self.client.post("/session/answer", data={"action": "next"}, follow_redirects=True)
+        body = self.client.get("/session/question").get_data(as_text=True)
+        self.assertIn("Question 3 of 3", body)
+        self.assertIn("Finish interview", body)
+
+    def test_completion_screen(self):
+        self.start(count=1)
+        response = self.client.post(
+            "/session/answer", data={"action": "next"}, follow_redirects=True
+        )
+        self.assertEqual(response.status_code, 200)
+        body = response.get_data(as_text=True)
+        self.assertIn("Interview complete", body)
+        self.assertIn("1 question", body)
+
+    def test_question_after_completion_redirects_to_complete(self):
+        self.start(count=1)
+        self.client.post("/session/answer", data={"action": "next"}, follow_redirects=True)
+        response = self.client.get("/session/question")
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("/session/complete", response.headers["Location"])
+
+    def test_start_new_interview_clears_session(self):
+        self.start(count=1)
+        self.client.post("/session/answer", data={"action": "next"}, follow_redirects=True)
+        home = self.client.post("/session/new", follow_redirects=True).get_data(as_text=True)
+        self.assertIn("Start a practice interview", home)
+        self.assertEqual(self.client.get("/session/question").status_code, 302)
+
+
+class TestInvalidNavigation(unittest.TestCase):
+    def setUp(self):
+        self.client = create_app().test_client()
+
+    def test_question_without_session_redirects_home(self):
+        response = self.client.get("/session/question")
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.headers["Location"], "/")
+
+    def test_answer_without_session_redirects_home(self):
+        response = self.client.post("/session/answer", data={"action": "next"})
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.headers["Location"], "/")
+
+    def test_complete_without_session_redirects_home(self):
+        response = self.client.get("/session/complete")
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.headers["Location"], "/")
+
+    def test_complete_before_finish_redirects_to_question(self):
+        self.client.post("/session", data={"role": "devops-engineer", "count": "2"})
+        response = self.client.get("/session/complete")
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("/session/question", response.headers["Location"])
+
+    def test_unknown_action_keeps_current_question(self):
+        self.client.post("/session", data={"role": "devops-engineer", "count": "2"})
+        response = self.client.post(
+            "/session/answer", data={"action": "bogus"}, follow_redirects=True
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Question 1 of 2", response.get_data(as_text=True))
 
 
 class TestValidationErrors(unittest.TestCase):

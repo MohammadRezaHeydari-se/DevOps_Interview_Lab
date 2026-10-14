@@ -1,20 +1,30 @@
 {% extends "base.html" %}
 
-{% block title %}Question 1 of {{ interview.questions|length }} - DevOps Interview Lab{% endblock %}
+{% block title %}Question {{ number }} of {{ total }} - DevOps Interview Lab{% endblock %}
 
 {% block content %}
-<p class="meta">
-  {{ interview.role.role }}
-  {% if interview.company %}· {{ interview.company.company }}{% endif %}
-  · {{ question.category }} ({{ question.difficulty }})
-</p>
+<p class="meta">{{ question.category }} ({{ question.difficulty }})</p>
 
-<h1>Question 1 of {{ interview.questions|length }}</h1>
+<h1>Question {{ number }} of {{ total }}</h1>
 
 <article class="card">
   <p class="question-text">{{ question.question }}</p>
 </article>
 
+<form class="card" method="post" action="{{ url_for('main.answer') }}">
+  <div class="field">
+    <label for="answer">Your answer</label>
+    <textarea id="answer" name="answer" rows="6" placeholder="Write your answer here...">{{ answer }}</textarea>
+  </div>
+  <div class="actions">
+    <button type="submit" name="action" value="reveal">Reveal answer</button>
+    <button type="submit" name="action" value="next" class="secondary">
+      {% if is_last %}Finish interview{% else %}Next question{% endif %}
+    </button>
+  </div>
+</form>
+
+{% if revealed %}
 <section class="answer">
   <h2>Short answer</h2>
   <p>{{ question.shortAnswer }}</p>
@@ -31,6 +41,5 @@
   </ul>
   {% endif %}
 </section>
-
-<a class="back" href="{{ url_for('main.home') }}">Start another session</a>
+{% endif %}
 {% endblock %}

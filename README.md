@@ -27,7 +27,7 @@ Run the web MVP from the repository root, then open http://127.0.0.1:5000:
 python3 -m src.web
 ```
 
-On the home page, choose a role (required), an optional company, a difficulty and a question count, then start the interview to see the first question.
+On the home page, choose a role (required), an optional company, a difficulty and a question count, then start the interview. You then work through the questions one at a time: write your answer in the textarea, reveal the reference answer on request, and move to the next question. After the last question you reach a completion screen where you can start a new interview. The interview lives only in your browser session; nothing is stored on a server.
 
 Run the temporary CLI practice session instead:
 

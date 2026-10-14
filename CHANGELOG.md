@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Interactive web interview flow: after starting on the home page, work through the generated questions one at a time, write an answer in a textarea, reveal the reference short answer and explanation on request, and move to the next question without repeats. A completion screen lets the user start a new interview.
+- `src/web/session_state.py` keeping only the ordered question ids and current index in Flask's signed-cookie session (no database). `create_app` now sets a per-instance random `SECRET_KEY`.
+- New routes and guards in `src/web/routes.py` (`GET /session/question`, `POST /session/answer`, `GET /session/complete`, `POST /session/new`) with POST/Redirect/GET and safe invalid-navigation redirects.
+- `src/web/templates/complete.html` and an updated `src/web/templates/question.html` that never renders the reference answer before a reveal request.
+- `load_questions_by_id()` in `src/web/catalog.py` to resolve questions by id through the core loader.
+- `tests/test_web.py` coverage for the full interview flow, answer reveal, order preservation, completion and invalid navigation.
+- DEC-008 in `docs/decisions.md` for local interview flow state without a database.
 - Minimal Flask web MVP (`python3 -m src.web`): a home page to choose a role (required), optional company, difficulty and question count, and a page showing the first question of the built session. Server-rendered Jinja templates with minimal CSS.
 - `src/web/__init__.py` (`create_app` factory), `src/web/routes.py` (thin controllers), `src/web/forms.py` (request validation and compatibility delegation), `src/web/catalog.py` (role/company/difficulty data from the core loaders), `src/web/__main__.py` (local run) and `src/web/templates` + `src/web/static`.
 - Friendly HTTP 400 errors for missing/unknown role, unknown company, unknown difficulty, invalid count and empty matches; role/company compatibility is delegated to `src.core.compatibility`.

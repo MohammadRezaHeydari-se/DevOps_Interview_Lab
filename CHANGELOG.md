@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Minimal Flask web MVP (`python3 -m src.web`): a home page to choose a role (required), optional company, difficulty and question count, and a page showing the first question of the built session. Server-rendered Jinja templates with minimal CSS.
+- `src/web/__init__.py` (`create_app` factory), `src/web/routes.py` (thin controllers), `src/web/forms.py` (request validation and compatibility delegation), `src/web/catalog.py` (role/company/difficulty data from the core loaders), `src/web/__main__.py` (local run) and `src/web/templates` + `src/web/static`.
+- Friendly HTTP 400 errors for missing/unknown role, unknown company, unknown difficulty, invalid count and empty matches; role/company compatibility is delegated to `src.core.compatibility`.
+- `tests/test_web.py` using Flask's test client, plus focused `parse_session_request` unit tests.
+- Flask as the single approved external dependency, documented in README (install and local run).
+- DEC-007 in `docs/decisions.md` for the Flask web MVP.
 - Reusable interview builder in the core: `src/core/interview_builder.py` (`build_interview`) composes a weighted, duplicate-free interview session from a required role profile, an optional compatible company profile, an optional difficulty filter, a requested question count and an optional seed. It reuses the existing selectors and degrades gracefully when the bank cannot satisfy the request.
 - `src/core/weighting.py` with the pure weighting math: `combine_weights` (role areas define the base weights; company focus adjusts but never replaces or adds categories) and `allocate_quota` (largest-remainder distribution with deterministic tie-breaking).
 - `src/core/compatibility.py` with `ensure_compatible` and `IncompatibleProfileError` to reject a company profile that does not support the requested role.

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Question 1 of {{ interview.questions|length }} - DevOps Interview Lab{% endblock %}
+
+{% block content %}
+<p class="meta">
+  {{ interview.role.role }}
+  {% if interview.company %}· {{ interview.company.company }}{% endif %}
+  · {{ question.category }} ({{ question.difficulty }})
+</p>
+
+<h1>Question 1 of {{ interview.questions|length }}</h1>
+
+<article class="card">
+  <p class="question-text">{{ question.question }}</p>
+</article>
+
+<section class="answer">
+  <h2>Short answer</h2>
+  <p>{{ question.shortAnswer }}</p>
+
+  <h2>Explanation</h2>
+  <p>{{ question.explanation }}</p>
+
+  {% if question.followUps %}
+  <h2>Follow-up questions</h2>
+  <ul>
+    {% for follow_up in question.followUps %}
+    <li>{{ follow_up }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</section>
+
+<a class="back" href="{{ url_for('main.home') }}">Start another session</a>
+{% endblock %}

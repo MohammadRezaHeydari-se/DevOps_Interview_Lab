@@ -73,3 +73,15 @@ Each decision should include:
   - Role areas always define the categories and base weights, and company focus is a bounded adjustment.
   - The builder is reusable by a future web UI and is not tied to the CLI.
   - The builder returns fewer questions rather than raising when the bank is insufficient, so callers can inspect `is_complete`.
+
+### DEC-007: Flask web MVP
+
+- **Date:** 2026-10-14
+- **Status:** Accepted
+- **Context:** TASK-008 requires a minimal browser front end for the already reusable core. A web stack had to be chosen; Flask is the only approved new dependency. The web layer must not duplicate the core's filtering, weighting or selection, and must stay a small local-development MVP.
+- **Decision:** Add a small `src/web` package using Flask with server-rendered Jinja templates and minimal CSS. `src/web/__init__.py` exposes a `create_app()` factory that registers one blueprint. Routers, request parsing, core data access and templates are separate small modules: `routes.py` (thin controllers), `forms.py` (input validation and compatibility delegation), `catalog.py` (core loaders and allowed values) and `templates/` + `static/`. The layer only calls `src.core` (`load_profiles`, `load_company_profiles`, `load_questions`, `ensure_compatible`, `build_interview`); it reimplements no business logic. Invalid input re-renders the home page with friendly messages and HTTP 400. Local run is `python3 -m src.web`.
+- **Consequences:**
+  - Flask becomes the first and only external dependency, enabled by explicit approval.
+  - The core stays UI-agnostic and the CLI is unchanged; the web layer is the product-facing front end.
+  - The MVP has no login, database, AI, scoring, persistence, containerization or deployment; those remain separate, later decisions.
+  - Routes, templates and styling stay separated, so each can grow or be replaced independently.

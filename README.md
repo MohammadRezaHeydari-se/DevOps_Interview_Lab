@@ -9,11 +9,27 @@ DevOps Interview Lab is a practical interview question bank and training applica
 
 ## Current status
 
-This project is in early development. The target product is a web application; no web framework has been selected yet. The question bank, the initial role and company profiles, a reusable interview builder, and a minimal CLI practice session are available today. The CLI is a temporary development and testing interface for the reusable core, not the product. Everything runs on the Python 3 standard library, with no external dependencies.
+This project is in early development. A minimal Flask web MVP is the product-facing layer today; no data store or deployment model has been selected yet. The question bank, the initial role and company profiles, a reusable interview builder, the web MVP, and a temporary CLI practice session are available. The CLI is a development and testing interface for the reusable core, not the product. The core has no external dependencies; Flask is the only external dependency and is used by the web layer only.
+
+## Installation
+
+The project targets Python 3. Install the single external dependency:
+
+```bash
+python3 -m pip install Flask
+```
 
 ## Usage
 
-Run a practice session from the repository root:
+Run the web MVP from the repository root, then open http://127.0.0.1:5000:
+
+```bash
+python3 -m src.web
+```
+
+On the home page, choose a role (required), an optional company, a difficulty and a question count, then start the interview to see the first question.
+
+Run the temporary CLI practice session instead:
 
 ```bash
 python3 -m src.cli.main

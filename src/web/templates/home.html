@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Start a practice interview</h1>
+<p class="lead">Choose a role, then tailor the session.</p>
+
+{% if errors %}
+<ul class="errors" role="alert">
+  {% for error in errors %}
+  <li>{{ error }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<form class="card" method="post" action="{{ url_for('main.create_session') }}">
+  <div class="field">
+    <label for="role">Role <span class="required">*</span></label>
+    <select id="role" name="role" required>
+      <option value="">Select a role</option>
+      {% for role in catalog.roles %}
+      <option value="{{ role.id }}" {% if form.get('role') == role.id %}selected{% endif %}>{{ role.role }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="company">Company (optional)</label>
+    <select id="company" name="company">
+      <option value="">No company</option>
+      {% for company in catalog.companies %}
+      <option value="{{ company.id }}" {% if form.get('company') == company.id %}selected{% endif %}>{{ company.company }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="difficulty">Difficulty</label>
+    <select id="difficulty" name="difficulty">
+      <option value="">All difficulties</option>
+      {% for difficulty in difficulties %}
+      <option value="{{ difficulty }}" {% if form.get('difficulty') == difficulty %}selected{% endif %}>{{ difficulty }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="count">Number of questions</label>
+    <input id="count" name="count" type="number" min="1" max="100" value="{{ form.get('count', 5) }}">
+  </div>
+
+  <button type="submit">Start interview</button>
+</form>
+{% endblock %}

@@ -200,7 +200,7 @@ class TestInterviewFlow(unittest.TestCase):
         self.start(count=1)
         self.client.post("/session/answer", data={"action": "next"}, follow_redirects=True)
         home = self.client.post("/session/new", follow_redirects=True).get_data(as_text=True)
-        self.assertIn("Start a practice interview", home)
+        self.assertIn("Configure your session", home)
         self.assertEqual(self.client.get("/session/question").status_code, 302)
 
 

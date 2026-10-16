@@ -3,15 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#091425">
   <title>{% block title %}DevOps Interview Lab{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <header class="site-header">
-    <a class="brand" href="{{ url_for('main.home') }}">DevOps Interview Lab</a>
+    <div class="header-inner">
+      <a class="brand" href="{{ url_for('main.home') }}"><span class="brand-mark" aria-hidden="true">⌘</span>DevOps Interview Lab</a>
+      <span class="header-note">Practice • Learn • Improve</span>
+    </div>
   </header>
   <main class="container">
     {% block content %}{% endblock %}
   </main>
+  <footer class="footer">Built for hands-on technical interview practice · Local MVP</footer>
 </body>
 </html>

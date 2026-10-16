@@ -3,7 +3,7 @@
 {% block content %}
 <p class="eyebrow">Your interview workspace</p>
 <h1>Build confidence.<br>One question at a time.</h1>
-<p class="lead">Practice real technical topics across DevOps, cloud and infrastructure. Choose a role and make every session your own.</p>
+<p class="lead">Simulate a technical job interview with role-based questions, practical scenarios and troubleshooting. Choose a role and start practicing.</p>
 
 {% if errors %}
 <ul class="errors" role="alert">
@@ -22,15 +22,6 @@
         <option value="">Select a role</option>
         {% for role in catalog.roles %}
         <option value="{{ role.id }}" {% if form.get('role') == role.id %}selected{% endif %}>{{ role.role }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div class="field">
-      <label for="company">Company (optional)</label>
-      <select id="company" name="company">
-        <option value="">No company</option>
-        {% for company in catalog.companies %}
-        <option value="{{ company.id }}" {% if form.get('company') == company.id %}selected{% endif %}>{{ company.company }}</option>
         {% endfor %}
       </select>
     </div>

@@ -1,23 +1,50 @@
 {% extends "base.html" %}
 {% block title %}Interview complete - DevOps Interview Lab{% endblock %}
 {% block content %}
-<p class="eyebrow">Session finished</p>
-<h1>Interview complete</h1>
-<p class="lead">You worked through {{ total }} question{{ '' if total == 1 else 's' }}. Consistency is what makes the difference.</p>
-{% if ratings %}
-<section class="card">
-  <h2 class="section-title">Self-assessment summary</h2>
-  <p class="help">Subjective; not automated grading.</p>
-  <ul class="summary-list">
-    {% for qid in question_ids %}
-      {% if qid in ratings %}
-        <li><span class="qid">{{ qid }}</span> — {{ ratings[qid] }}</li>
-      {% endif %}
+<div class="report-heading">
+  <div><p class="eyebrow">Interview report / {{ role or "Technical practice" }}</p><h1>Interview complete</h1><p class="lead">Your personal readiness snapshot, based on the confidence ratings you selected.</p></div>
+</div>
+<section class="report-hero" aria-label="Interview self-assessment report">
+  <div class="report-score">
+    {% if report.score is not none %}
+    <span class="report-score-value">{{ report.score }}<small>/100</small></span>
+    <strong>Self-rated confidence</strong>
+    {% else %}
+    <span class="report-score-value">—</span><strong>Not enough information</strong>
+    {% endif %}
+    <p>Not an employer match score or automatic answer evaluation.</p>
+  </div>
+  <div class="report-summary">
+    <p class="eyebrow">Your session</p>
+    <h2>{{ role or "Technical interview" }}</h2>
+    <div class="report-stats"><div><strong>{{ report.total }}</strong><span>Questions</span></div><div><strong>{{ report.assessed }}</strong><span>Self-rated</span></div><div><strong>{{ report.unrated }}</strong><span>Not rated</span></div></div>
+    <p class="help">Ratings: Confident = 100, Somewhat = 50, Need practice = 0. Only rated questions count. This is a practice indicator, not hiring suitability.</p>
+  </div>
+</section>
+<section class="report-section">
+  <div class="report-section-head"><div><p class="eyebrow">Skill breakdown</p><h2>Where to focus next</h2></div></div>
+  {% if report.areas %}
+  <div class="skill-list">
+    {% for area in report.areas %}
+    <div class="skill-row">
+      <div class="skill-label"><strong>{{ area.name }}</strong><span>{{ area.count }} rated · {{ area.score }}/100</span></div>
+      <div class="skill-track"><div class="skill-fill" style="width: {{ area.score }}%"></div></div>
+    </div>
     {% endfor %}
-  </ul>
+  </div>
+  {% else %}
+  <p class="lead">No questions were rated. Try another session and choose a confidence level after each question to get a breakdown.</p>
+  {% endif %}
+</section>
+{% if report.practice %}
+<section class="report-section">
+  <p class="eyebrow">Suggested next steps</p><h2>Practice these topics again</h2>
+  <div class="focus-tags">{% for area in report.practice %}<span>{{ area.name }}</span>{% endfor %}</div>
+  <p class="help">Suggested from your self-ratings, not an assessment of your actual answers.</p>
 </section>
 {% endif %}
-<form class="card" method="post" action="{{ url_for('main.new_session') }}">
-  <button type="submit">Start a new interview →</button>
-</form>
+{% if ratings %}
+<details class="report-details"><summary>View individual self-assessments</summary><ul class="summary-list">{% for qid in question_ids %}{% if qid in ratings %}<li><span class="qid">{{ qid }}</span> — {{ ratings[qid] }}</li>{% endif %}{% endfor %}</ul></details>
+{% endif %}
+<form class="report-new" method="post" action="{{ url_for('main.new_session') }}"><button type="submit">Start a new interview →</button></form>
 {% endblock %}

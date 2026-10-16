@@ -15,15 +15,17 @@ from flask import session
 _QUESTION_IDS = "interview_question_ids"
 _INDEX = "interview_index"
 _RATINGS = "interview_ratings"
+_ROLE = "interview_role"
 
 _VALID_RATINGS = {"got-it", "partly", "need-practice"}
 
 
-def start(question_ids: List[str]) -> None:
+def start(question_ids: List[str], role: str = "") -> None:
     """Begin a session with the given question ids in their generated order."""
     session[_QUESTION_IDS] = list(question_ids)
     session[_INDEX] = 0
     session[_RATINGS] = {}
+    session[_ROLE] = role
 
 
 def clear() -> None:
@@ -31,6 +33,7 @@ def clear() -> None:
     session.pop(_QUESTION_IDS, None)
     session.pop(_INDEX, None)
     session.pop(_RATINGS, None)
+    session.pop(_ROLE, None)
 
 
 def is_active() -> bool:
@@ -96,3 +99,8 @@ def record_rating(rating: str) -> None:
         stored = {}
     stored[question_id] = rating
     session[_RATINGS] = stored
+
+
+def role() -> str:
+    """Role label selected for this practice session."""
+    return str(session.get(_ROLE, ""))

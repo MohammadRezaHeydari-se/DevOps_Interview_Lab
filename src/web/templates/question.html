@@ -45,7 +45,7 @@
   <div class="reference-heading"><p class="eyebrow">Reference notes</p><h2 id="reference-title">Let's unpack the answer.</h2></div>
   <div class="reference-grid">
     <div><h3>Short answer</h3><p>{{ question.shortAnswer }}</p></div>
-    <div><h3>Why it works</h3><p>{{ question.explanation }}</p></div>
+    <div><h3>Explanation</h3><p>{{ question.explanation }}</p></div>
   </div>
   {% if question.followUps %}
   <div class="follow-ups"><h3>What an interviewer might ask next</h3><ul>{% for follow_up in question.followUps %}<li>{{ follow_up }}</li>{% endfor %}</ul></div>

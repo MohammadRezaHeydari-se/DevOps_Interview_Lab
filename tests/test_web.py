@@ -110,6 +110,22 @@ class TestInterviewFlow(unittest.TestCase):
             follow_redirects=True,
         )
 
+    def test_interview_has_distinct_interviewer_and_response_panels(self):
+        body = self.start(count=2).get_data(as_text=True)
+        self.assertIn('class="interview-grid"', body)
+        self.assertIn('class="interviewer-panel"', body)
+        self.assertIn('class="candidate-panel"', body)
+        self.assertIn('aria-label="Interview progress"', body)
+
+    def test_revealed_reference_appears_after_response(self):
+        self.start(count=1)
+        body = self.client.post(
+            "/session/answer", data={"action": "reveal", "answer": "My approach"}
+        ).get_data(as_text=True)
+        self.assertIn('class="reference-panel"', body)
+        self.assertIn("My approach", body)
+        self.assertIn("Explanation", body)
+
     def test_first_question_hides_reference_answer(self):
         body = self.start(count=5).get_data(as_text=True)
         self.assertIn("Question 1 of 5", body)

@@ -22,7 +22,7 @@
   <section class="candidate-panel" aria-labelledby="candidate-title">
     <div class="panel-top"><span class="panel-dot candidate-dot" aria-hidden="true"></span><span id="candidate-title">YOUR RESPONSE</span><span class="response-status">PRIVATE PRACTICE</span></div>
     <form class="response-form" method="post" action="{{ url_for('main.answer') }}">
-      <label for="answer" class="speaker-label">WRITE YOUR APPROACH</label>
+      <label for="answer" class="speaker-label">Your answer (optional)</label>
       <textarea id="answer" name="answer" rows="10" placeholder="Start with what you would check first, why it matters, and what you would do next...">{{ answer }}</textarea>
       <p class="help">Your answer is optional. It is not automatically graded or saved.</p>
       <fieldset class="assessment">
@@ -34,7 +34,7 @@
         </div>
       </fieldset>
       <div class="actions">
-        <button type="submit" name="action" value="reveal">Review answer <span aria-hidden="true">↗</span></button>
+        <button type="submit" name="action" value="reveal">Reveal answer <span aria-hidden="true">↗</span></button>
         <button type="submit" name="action" value="next" class="secondary">{% if is_last %}Finish interview{% else %}Next question{% endif %} <span aria-hidden="true">→</span></button>
       </div>
     </form>

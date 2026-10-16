@@ -9,8 +9,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List, Mapping, Optional, Tuple
 
-from src.core.company_models import CompanyProfile
-from src.core.compatibility import IncompatibleProfileError, ensure_compatible
 from src.core.profile_models import RoleProfile
 
 from .catalog import Catalog, difficulty_options
@@ -24,7 +22,6 @@ class SessionRequest:
     """A validated interview request ready for the core interview builder."""
 
     role: RoleProfile
-    company: Optional[CompanyProfile]
     difficulty: Optional[str]
     count: int
 
@@ -37,21 +34,14 @@ def parse_session_request(
     errors: List[str] = []
 
     role = _resolve_role(form.get("role", ""), catalog, errors)
-    company = _resolve_company(form.get("company", ""), catalog, errors)
     difficulty = _resolve_difficulty(form.get("difficulty", ""), errors)
     count = _resolve_count(form.get("count", ""), errors)
 
     if role is None or errors:
         return None, errors
 
-    try:
-        ensure_compatible(role, company)
-    except IncompatibleProfileError:
-        errors.append(f"{company.company} does not offer the {role.role} role.")
-        return None, errors
-
     return (
-        SessionRequest(role=role, company=company, difficulty=difficulty, count=count),
+        SessionRequest(role=role, difficulty=difficulty, count=count),
         errors,
     )
 
@@ -67,18 +57,6 @@ def _resolve_role(
     if role is None:
         errors.append("Please choose a role from the list.")
     return role
-
-
-def _resolve_company(
-    value: str, catalog: Catalog, errors: List[str]
-) -> Optional[CompanyProfile]:
-    value = value.strip()
-    if not value:
-        return None
-    company = catalog.companies_by_id.get(value)
-    if company is None:
-        errors.append("Please choose a company from the list.")
-    return company
 
 
 def _resolve_difficulty(value: str, errors: List[str]) -> Optional[str]:

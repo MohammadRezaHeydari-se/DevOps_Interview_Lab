@@ -1,11 +1,9 @@
 {% extends "base.html" %}
-
 {% block title %}Interview complete - DevOps Interview Lab{% endblock %}
-
 {% block content %}
-<h1>Interview complete</h1>
-<p class="lead">You worked through {{ total }} question{{ '' if total == 1 else 's' }}.</p>
-
+<p class="eyebrow">Session finished</p>
+<h1>Nice work. Keep building.</h1>
+<p class="lead">You worked through {{ total }} question{{ '' if total == 1 else 's' }}. Consistency is what makes the difference.</p>
 {% if ratings %}
 <section class="card">
   <h2 class="section-title">Self-assessment summary</h2>
@@ -19,8 +17,7 @@
   </ul>
 </section>
 {% endif %}
-
-<form method="post" action="{{ url_for('main.new_session') }}">
-  <button type="submit">Start a new interview</button>
+<form class="card" method="post" action="{{ url_for('main.new_session') }}">
+  <button type="submit">Start a new interview →</button>
 </form>
 {% endblock %}

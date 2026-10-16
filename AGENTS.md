@@ -12,7 +12,7 @@ These instructions apply to all AI coding assistants working on the DevOps Inter
 
 ## Product direction
 
-- The final product is a web application. No web framework, frontend stack, or deployment model has been selected yet, and no such choice may be made unless it is explicitly requested.
+- The product direction is web-based. A minimal Flask web MVP already exists in `src/web`; do not replace or expand its framework, frontend stack, or deployment model unless explicitly requested.
 - The CLI in `src/cli` is a temporary development and testing interface for the reusable core. It is not the product and must not become one.
 - Do not expand the CLI beyond its current scope: no new features, options, or layers of convenience.
 - The reusable core in `src/core` must stay independent from the CLI and from any future web UI.

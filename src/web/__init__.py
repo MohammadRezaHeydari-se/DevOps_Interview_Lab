@@ -19,6 +19,12 @@ from .routes import bp
 def create_app() -> Flask:
     """Create the Flask application with its routes registered."""
     app = Flask(__name__)
-    app.config["SECRET_KEY"] = secrets.token_hex(32)
+    app.config.update(
+        SECRET_KEY=secrets.token_hex(32),
+        SESSION_COOKIE_HTTPONLY=True,
+        SESSION_COOKIE_SAMESITE="Lax",
+        SESSION_COOKIE_SECURE=False,  # Local HTTP only; enable for any HTTPS deployment.
+        MAX_CONTENT_LENGTH=16 * 1024,  # Interview forms contain only short text.
+    )
     app.register_blueprint(bp)
     return app

@@ -1,41 +1,54 @@
 {% extends "base.html" %}
-
 {% block title %}Question {{ number }} of {{ total }} - DevOps Interview Lab{% endblock %}
-
 {% block content %}
-<p class="eyebrow">Interview in progress</p>
-<p class="meta">{{ question.category }} ({{ question.difficulty }})</p>
-<h1>Question {{ number }} of {{ total }}</h1>
+<section class="interview-top">
+  <div>
+    <p class="eyebrow">Technical interview / Live session</p>
+    <h1>Interview workspace</h1>
+    <p class="lead">Think through the problem, explain your approach, then compare it with the reference.</p>
+  </div>
+  <div class="question-counter"><span>QUESTION</span><strong>{{ "%02d"|format(number) }} <small>/ {{ "%02d"|format(total) }}</small></strong></div>
+</section>
 <div class="progress-track" role="progressbar" aria-label="Interview progress" aria-valuemin="0" aria-valuemax="{{ total }}" aria-valuenow="{{ number }}"><div class="progress-fill" style="width: {{ (number / total * 100) | round(1) }}%"></div></div>
-<article class="card">
-  <p class="question-text">{{ question.question }}</p>
-</article>
-<form class="card" method="post" action="{{ url_for('main.answer') }}">
-  <div class="field">
-    <label for="answer">Your answer (optional)</label>
-    <textarea id="answer" name="answer" rows="6" placeholder="Write your answer here or leave it empty...">{{ answer }}</textarea>
-  </div>
-  <div class="field">
-    <label>Self-assessment (subjective, not automated grading)</label>
-    <div class="radio-group">
-      <label class="radio"><input type="radio" name="self_assessment" value="got-it" {% if rating == "got-it" %}checked{% endif %}> Got it</label>
-      <label class="radio"><input type="radio" name="self_assessment" value="partly" {% if rating == "partly" %}checked{% endif %}> Partly</label>
-      <label class="radio"><input type="radio" name="self_assessment" value="need-practice" {% if rating == "need-practice" %}checked{% endif %}> Need practice</label>
+<div class="interview-grid">
+  <section class="interviewer-panel" aria-labelledby="interviewer-title">
+    <div class="panel-top"><span class="panel-dot" aria-hidden="true"></span><span id="interviewer-title">INTERVIEWER</span><span class="topic-chip">{{ question.category }} · {{ question.difficulty }}</span></div>
+    <div class="interviewer-content">
+      <p class="speaker-label">TECHNICAL QUESTION</p>
+      <p class="question-text">{{ question.question }}</p>
     </div>
-    <p class="help">This is for your own reflection only.</p>
-  </div>
-  <div class="actions">
-    <button type="submit" name="action" value="reveal">Reveal answer</button>
-    <button type="submit" name="action" value="next" class="secondary">{% if is_last %}Finish interview{% else %}Next question{% endif %}</button>
-  </div>
-</form>
+    <div class="panel-foot">Take your time. Explain the reasoning behind your choices.</div>
+  </section>
+  <section class="candidate-panel" aria-labelledby="candidate-title">
+    <div class="panel-top"><span class="panel-dot candidate-dot" aria-hidden="true"></span><span id="candidate-title">YOUR RESPONSE</span><span class="response-status">PRIVATE PRACTICE</span></div>
+    <form class="response-form" method="post" action="{{ url_for('main.answer') }}">
+      <label for="answer" class="speaker-label">WRITE YOUR APPROACH</label>
+      <textarea id="answer" name="answer" rows="10" placeholder="Start with what you would check first, why it matters, and what you would do next...">{{ answer }}</textarea>
+      <p class="help">Your answer is optional. It is not automatically graded or saved.</p>
+      <fieldset class="assessment">
+        <legend>How confident do you feel?</legend>
+        <div class="radio-group">
+          <label class="radio"><input type="radio" name="self_assessment" value="got-it" {% if rating == "got-it" %}checked{% endif %}> Confident</label>
+          <label class="radio"><input type="radio" name="self_assessment" value="partly" {% if rating == "partly" %}checked{% endif %}> Somewhat</label>
+          <label class="radio"><input type="radio" name="self_assessment" value="need-practice" {% if rating == "need-practice" %}checked{% endif %}> Need practice</label>
+        </div>
+      </fieldset>
+      <div class="actions">
+        <button type="submit" name="action" value="reveal">Review answer <span aria-hidden="true">↗</span></button>
+        <button type="submit" name="action" value="next" class="secondary">{% if is_last %}Finish interview{% else %}Next question{% endif %} <span aria-hidden="true">→</span></button>
+      </div>
+    </form>
+  </section>
+</div>
 {% if revealed %}
-<section class="answer">
-  <h2>Short answer</h2><p>{{ question.shortAnswer }}</p>
-  <h2>Explanation</h2><p>{{ question.explanation }}</p>
+<section class="reference-panel" aria-labelledby="reference-title">
+  <div class="reference-heading"><p class="eyebrow">Reference notes</p><h2 id="reference-title">Let's unpack the answer.</h2></div>
+  <div class="reference-grid">
+    <div><h3>Short answer</h3><p>{{ question.shortAnswer }}</p></div>
+    <div><h3>Why it works</h3><p>{{ question.explanation }}</p></div>
+  </div>
   {% if question.followUps %}
-  <h2>Follow-up questions</h2>
-  <ul>{% for follow_up in question.followUps %}<li>{{ follow_up }}</li>{% endfor %}</ul>
+  <div class="follow-ups"><h3>What an interviewer might ask next</h3><ul>{% for follow_up in question.followUps %}<li>{{ follow_up }}</li>{% endfor %}</ul></div>
   {% endif %}
 </section>
 {% endif %}

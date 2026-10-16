@@ -181,3 +181,36 @@ body:has(.interview-grid) .progress-fill { background: #d2f4a7; }
   .reference-panel { padding: 1.25rem; }
   .response-form .radio-group { grid-template-columns: 1fr; }
 }
+
+/* Report: strong information hierarchy instead of a generic completion card. */
+body:has(.report-hero) { background: #0c1017; }
+body:has(.report-hero) .container { max-width: 1080px; }
+.report-heading .lead { max-width: 70ch; }
+.report-hero { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: 1rem; margin-top: 2rem; }
+.report-score, .report-summary, .report-section { border: 1px solid #34404d; border-radius: 12px; background: #161f2a; padding: clamp(1.5rem, 3vw, 2.5rem); }
+.report-score { display: flex; flex-direction: column; justify-content: center; background: #d2f4a7; color: #182515; }
+.report-score-value { display: block; font-size: clamp(4rem, 9vw, 6rem); font-weight: 800; line-height: 1.05; letter-spacing: -.075em; font-variant-numeric: tabular-nums; }
+.report-score-value small { font-size: 1.2rem; font-weight: 600; letter-spacing: 0; }
+.report-score strong { font-size: 1.05rem; }
+.report-score p { color: #34472d; font-size: .83rem; max-width: 35ch; }
+.report-summary h2 { margin: 0 0 2rem; font-size: 1.65rem; }
+.report-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; border-top: 1px solid #34404d; padding-top: 1.5rem; }
+.report-stats div { display: flex; flex-direction: column; }
+.report-stats strong { font-size: 1.8rem; font-variant-numeric: tabular-nums; }
+.report-stats span { font-size: .77rem; color: #a5b5c7; }
+.report-summary .help { margin-top: 1.5rem; }
+.report-section { margin-top: 1rem; }
+.report-section h2 { font-size: 1.45rem; margin: .2rem 0 1.5rem; letter-spacing: -.03em; }
+.skill-list { display: grid; gap: 1.35rem; }
+.skill-label { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: .6rem; }
+.skill-label strong { font-size: .95rem; }
+.skill-label span { font-size: .8rem; color: #a9b8c9; }
+.skill-track { height: 9px; background: #303c49; border-radius: 5px; overflow: hidden; }
+.skill-fill { height: 100%; background: #d2f4a7; border-radius: 5px; }
+.focus-tags { display: flex; flex-wrap: wrap; gap: .6rem; }
+.focus-tags span { border: 1px solid #4b5c6d; padding: .55rem .85rem; border-radius: 6px; font-size: .9rem; background: #202d3a; }
+.report-details { margin-top: 1rem; padding: 1.2rem; border: 1px solid #34404d; border-radius: 10px; }
+.report-details summary { cursor: pointer; font-weight: 700; }
+.report-new { margin-top: 1.5rem; }
+.report-new button { background: #d2f4a7; border-color: #d2f4a7; border-radius: 7px; box-shadow: none; }
+@media (max-width: 700px) { .report-hero { grid-template-columns: 1fr; } .report-stats strong { font-size: 1.5rem; } }

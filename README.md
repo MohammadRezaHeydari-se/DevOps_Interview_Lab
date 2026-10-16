@@ -21,7 +21,7 @@ source .venv/bin/activate
 python -m pip install -r requirements.txt
 ```
 
-Flask is pinned in `requirements.txt` and the Python 3.12 test suite runs in GitHub Actions. The web server uses Flask's development server with debugging disabled and binds to `127.0.0.1`; it is intended **only for local practice**, not public deployment. The interview state is stored in a browser cookie and is not persisted between server restarts.
+Flask is pinned in `requirements.txt` and the Python 3.12 test suite runs in GitHub Actions. The web server uses Flask's development server with debugging disabled and binds to `127.0.0.1`; it is intended **only for local practice**, not public deployment. Session cookies are HttpOnly and SameSite=Lax, with Secure disabled for local HTTP. A new random signing key is generated at each application startup, so interview state stored in the signed browser cookie is invalidated on server restart. Form requests are limited to 16 KiB. There is no CSRF token mechanism, authentication, persistent storage, or deployment hardening; these must be reviewed before any public deployment.
 
 ## Usage
 
@@ -47,7 +47,7 @@ python -m unittest discover -s tests -v
 
 ## Automated checks
 
-GitHub Actions runs the Python `unittest` suite on pushes to `main` and on pull requests. You can run the same suite locally with the command above. A successful test run is not a production security audit.
+GitHub Actions runs the Python `unittest` suite and a blocking `pip-audit` dependency vulnerability scan on pushes to `main` and on pull requests. You can run the test suite locally with the command above. Passing these checks does not establish production security.
 
 ## Planned areas
 

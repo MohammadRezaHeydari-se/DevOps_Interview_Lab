@@ -195,6 +195,25 @@ class TestInterviewFlow(unittest.TestCase):
         self.assertIn("Question 3 of 3", body)
         self.assertIn("Finish interview", body)
 
+    def test_report_shows_role_and_self_rated_score(self):
+        self.start(count=1)
+        self.client.post(
+            "/session/answer",
+            data={"action": "next", "self_assessment": "got-it"},
+        )
+        body = self.client.get("/session/complete").get_data(as_text=True)
+        self.assertIn("DevOps Engineer", body)
+        self.assertIn("100", body)
+        self.assertIn("Self-rated confidence", body)
+        self.assertIn("Skill breakdown", body)
+
+    def test_unrated_interview_does_not_claim_match_score(self):
+        self.start(count=1)
+        self.client.post("/session/answer", data={"action": "next"})
+        body = self.client.get("/session/complete").get_data(as_text=True)
+        self.assertIn("Not enough information", body)
+        self.assertIn("Not rated", body)
+
     def test_completion_screen(self):
         self.start(count=1)
         response = self.client.post(

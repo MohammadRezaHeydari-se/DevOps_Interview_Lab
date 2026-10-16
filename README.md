@@ -13,18 +13,22 @@ This project is in early development. A minimal Flask web MVP is the product-fac
 
 ## Installation
 
-The project targets Python 3. Install the single external dependency:
+Python 3 and Flask are required for the web MVP. From the repository root, create an isolated virtual environment and install Flask:
 
 ```bash
-python3 -m pip install Flask
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install Flask
 ```
+
+The project currently does not pin a Flask version; installation is not yet reproducible. The web server uses Flask's development mode and is intended **only for local practice**, not public deployment.
 
 ## Usage
 
 Run the web MVP from the repository root, then open http://127.0.0.1:5000:
 
 ```bash
-python3 -m src.web
+python -m src.web
 ```
 
 On the home page, choose a role (required), an optional company, a difficulty and a question count, then start the interview. You then work through the questions one at a time: write your answer in the textarea, reveal the reference answer on request, and move to the next question. After the last question you reach a completion screen where you can start a new interview. The interview lives only in your browser session; nothing is stored on a server.
@@ -32,13 +36,13 @@ On the home page, choose a role (required), an optional company, a difficulty an
 Run the temporary CLI practice session instead:
 
 ```bash
-python3 -m src.cli.main
+python -m src.cli.main
 ```
 
 Run the tests:
 
 ```bash
-python3 -m unittest discover -s tests -v
+python -m unittest discover -s tests -v
 ```
 
 ## Planned areas

@@ -3,14 +3,13 @@
 {% block title %}Question {{ number }} of {{ total }} - DevOps Interview Lab{% endblock %}
 
 {% block content %}
+<p class="eyebrow">Interview in progress</p>
 <p class="meta">{{ question.category }} ({{ question.difficulty }})</p>
-
 <h1>Question {{ number }} of {{ total }}</h1>
-
+<div class="progress-track" role="progressbar" aria-label="Interview progress" aria-valuemin="0" aria-valuemax="{{ total }}" aria-valuenow="{{ number }}"><div class="progress-fill" style="width: {{ (number / total * 100) | round(1) }}%"></div></div>
 <article class="card">
   <p class="question-text">{{ question.question }}</p>
 </article>
-
 <form class="card" method="post" action="{{ url_for('main.answer') }}">
   <div class="field">
     <label for="answer">Your answer (optional)</label>
@@ -19,44 +18,24 @@
   <div class="field">
     <label>Self-assessment (subjective, not automated grading)</label>
     <div class="radio-group">
-      <label class="radio">
-        <input type="radio" name="self_assessment" value="got-it" {% if rating == "got-it" %}checked{% endif %}>
-        Got it
-      </label>
-      <label class="radio">
-        <input type="radio" name="self_assessment" value="partly" {% if rating == "partly" %}checked{% endif %}>
-        Partly
-      </label>
-      <label class="radio">
-        <input type="radio" name="self_assessment" value="need-practice" {% if rating == "need-practice" %}checked{% endif %}>
-        Need practice
-      </label>
+      <label class="radio"><input type="radio" name="self_assessment" value="got-it" {% if rating == "got-it" %}checked{% endif %}> Got it</label>
+      <label class="radio"><input type="radio" name="self_assessment" value="partly" {% if rating == "partly" %}checked{% endif %}> Partly</label>
+      <label class="radio"><input type="radio" name="self_assessment" value="need-practice" {% if rating == "need-practice" %}checked{% endif %}> Need practice</label>
     </div>
     <p class="help">This is for your own reflection only.</p>
   </div>
   <div class="actions">
     <button type="submit" name="action" value="reveal">Reveal answer</button>
-    <button type="submit" name="action" value="next" class="secondary">
-      {% if is_last %}Finish interview{% else %}Next question{% endif %}
-    </button>
+    <button type="submit" name="action" value="next" class="secondary">{% if is_last %}Finish interview{% else %}Next question{% endif %}</button>
   </div>
 </form>
-
 {% if revealed %}
 <section class="answer">
-  <h2>Short answer</h2>
-  <p>{{ question.shortAnswer }}</p>
-
-  <h2>Explanation</h2>
-  <p>{{ question.explanation }}</p>
-
+  <h2>Short answer</h2><p>{{ question.shortAnswer }}</p>
+  <h2>Explanation</h2><p>{{ question.explanation }}</p>
   {% if question.followUps %}
   <h2>Follow-up questions</h2>
-  <ul>
-    {% for follow_up in question.followUps %}
-    <li>{{ follow_up }}</li>
-    {% endfor %}
-  </ul>
+  <ul>{% for follow_up in question.followUps %}<li>{{ follow_up }}</li>{% endfor %}</ul>
   {% endif %}
 </section>
 {% endif %}

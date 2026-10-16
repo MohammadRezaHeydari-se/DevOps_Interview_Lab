@@ -15,6 +15,7 @@ from src.core.models import Question
 from . import session_state
 from .catalog import Catalog, difficulty_options, load_catalog, load_questions_by_id
 from .forms import parse_session_request
+from .report import build_report
 
 bp = Blueprint("main", __name__)
 
@@ -88,7 +89,7 @@ def create_session():
             status=400,
         )
 
-    session_state.start([question.id for question in interview.questions])
+    session_state.start([question.id for question in interview.questions], session_request.role.role)
     return redirect(url_for("main.question"))
 
 
@@ -160,6 +161,8 @@ def complete():
         total=session_state.total(),
         ratings=ratings,
         question_ids=session_state.question_ids(),
+        role=session_state.role(),
+        report=build_report(session_state.question_ids(), ratings, load_questions_by_id()),
     )
 
 

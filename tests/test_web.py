@@ -4,7 +4,6 @@ import html
 import re
 import unittest
 
-from src.core.company_models import CompanyProfile
 from src.core.loader import load_questions
 from src.core.profile_models import RoleProfile
 from src.web import create_app
@@ -24,15 +23,6 @@ def make_role(role_id: str, role: str) -> RoleProfile:
     return RoleProfile(id=role_id, role=role, areas={"Linux": 1.0})
 
 
-def make_company(company_id: str, company: str, role_ids: list) -> CompanyProfile:
-    return CompanyProfile(
-        id=company_id,
-        company=company,
-        roleProfileIds=role_ids,
-        focus={"Linux": 1.0},
-    )
-
-
 class TestHomePage(unittest.TestCase):
     def setUp(self):
         self.client = create_app().test_client()
@@ -42,7 +32,7 @@ class TestHomePage(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         body = response.get_data(as_text=True)
         self.assertIn('name="role"', body)
-        self.assertIn('name="company"', body)
+        self.assertNotIn('name="company"', body)
         self.assertIn('name="difficulty"', body)
         self.assertIn('name="count"', body)
 
@@ -51,9 +41,9 @@ class TestHomePage(unittest.TestCase):
         self.assertIn("DevOps Engineer", body)
         self.assertIn("IT Support", body)
 
-    def test_home_lists_existing_companies_and_difficulties(self):
+    def test_home_lists_difficulties_without_company_names(self):
         body = self.client.get("/").get_data(as_text=True)
-        self.assertIn("Kreab", body)
+        self.assertNotIn("Kreab", body)
         self.assertIn("All difficulties", body)
         self.assertIn("junior", body)
 
@@ -90,15 +80,6 @@ class TestCreateSession(unittest.TestCase):
         body = response.get_data(as_text=True)
         self.assertIn("Question 1 of 5", body)
         self.assertIn('name="answer"', body)
-
-    def test_request_with_company_starts_interview(self):
-        response = self.client.post(
-            "/session",
-            data={"role": "devops-engineer", "company": "itm8", "count": "2"},
-            follow_redirects=True,
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Question 1 of 2", response.get_data(as_text=True))
 
     def test_requested_count_is_reflected(self):
         response = self.client.post(
@@ -379,11 +360,6 @@ class TestValidationErrors(unittest.TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertIn("role from the list", response.get_data(as_text=True))
 
-    def test_unknown_company(self):
-        response = self.post(role="devops-engineer", company="nope", count="3")
-        self.assertEqual(response.status_code, 400)
-        self.assertIn("company from the list", response.get_data(as_text=True))
-
     def test_unknown_difficulty(self):
         response = self.post(role="devops-engineer", difficulty="expert", count="3")
         self.assertEqual(response.status_code, 400)
@@ -414,41 +390,35 @@ class TestSessionRequestValidation(unittest.TestCase):
     def setUp(self):
         self.catalog = Catalog(
             roles=[make_role("r1", "Role One"), make_role("r2", "Role Two")],
-            companies=[
-                make_company("c1", "Company One", ["r1"]),
-                make_company("c2", "Company Two", ["r2"]),
-            ],
+            companies=[],
         )
 
-    def test_valid_request_is_built(self):
+    def test_valid_role_request_is_built(self):
         request, errors = parse_session_request(
-            {"role": "r1", "company": "c1", "difficulty": "", "count": "5"},
+            {"role": "r1", "difficulty": "", "count": "5"},
             self.catalog,
         )
         self.assertEqual(errors, [])
         self.assertIsNotNone(request)
         self.assertEqual(request.role.id, "r1")
-        self.assertEqual(request.company.id, "c1")
         self.assertIsNone(request.difficulty)
         self.assertEqual(request.count, 5)
 
-    def test_company_is_optional(self):
+    def test_role_request_does_not_need_company(self):
         request, errors = parse_session_request(
-            {"role": "r1", "company": "", "difficulty": "junior", "count": "2"},
+            {"role": "r1", "difficulty": "junior", "count": "2"},
             self.catalog,
         )
         self.assertEqual(errors, [])
-        self.assertIsNone(request.company)
         self.assertEqual(request.difficulty, "junior")
 
-    def test_incompatible_company_is_rejected(self):
+    def test_company_field_is_ignored_when_submitted(self):
         request, errors = parse_session_request(
-            {"role": "r1", "company": "c2", "difficulty": "", "count": "5"},
+            {"role": "r1", "company": "unknown", "count": "2"},
             self.catalog,
         )
-        self.assertIsNone(request)
-        self.assertEqual(len(errors), 1)
-        self.assertIn("does not offer", errors[0])
+        self.assertEqual(errors, [])
+        self.assertEqual(request.role.id, "r1")
 
 
 if __name__ == "__main__":

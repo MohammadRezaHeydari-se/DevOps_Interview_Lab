@@ -13,15 +13,15 @@ This project is in early development. A minimal Flask web MVP is the product-fac
 
 ## Installation
 
-Python 3 and Flask are required for the web MVP. From the repository root, create an isolated virtual environment and install Flask:
+Python 3.12 is used in CI. From the repository root, create an isolated virtual environment and install the declared dependencies:
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install Flask
+python -m pip install -r requirements.txt
 ```
 
-The project currently does not pin a Flask version; installation is not yet reproducible. The web server uses Flask's development mode and is intended **only for local practice**, not public deployment.
+Flask is pinned in `requirements.txt` and the Python 3.12 test suite runs in GitHub Actions. The web server uses Flask's development server with debugging disabled and binds to `127.0.0.1`; it is intended **only for local practice**, not public deployment. The interview state is stored in a browser cookie and is not persisted between server restarts.
 
 ## Usage
 
@@ -44,6 +44,10 @@ Run the tests:
 ```bash
 python -m unittest discover -s tests -v
 ```
+
+## Automated checks
+
+GitHub Actions runs the Python `unittest` suite on pushes to `main` and on pull requests. You can run the same suite locally with the command above. A successful test run is not a production security audit.
 
 ## Planned areas
 

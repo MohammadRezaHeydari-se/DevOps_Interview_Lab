@@ -77,7 +77,6 @@ def create_session():
     interview = build_interview(
         session_request.role,
         list(load_questions_by_id().values()),
-        company=session_request.company,
         difficulty=session_request.difficulty,
         count=session_request.count,
     )

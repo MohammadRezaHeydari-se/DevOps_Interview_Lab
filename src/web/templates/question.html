@@ -24,7 +24,7 @@
     <form class="response-form" method="post" action="{{ url_for('main.answer') }}">
       <label for="answer" class="speaker-label">Your answer (optional)</label>
       <textarea id="answer" name="answer" rows="10" placeholder="Start with what you would check first, why it matters, and what you would do next...">{{ answer }}</textarea>
-      <p class="help">Your answer is optional. It is not automatically graded or saved.</p>
+      <p class="help">Your answer is optional and is not automatically graded or saved. Confidence ratings are subjective and power your final practice report.</p>
       <fieldset class="assessment">
         <legend>How confident do you feel?</legend>
         <div class="radio-group">
